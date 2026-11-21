@@ -14,7 +14,10 @@
 - [x] Document a provisional staging tree and packaging blockers
 - [x] Add a reproducible SVG-to-PNG asset staging script
 - [x] Add a red/yellow TV TIME theme-list icon master
-- [ ] Run the asset preparation script and inspect generated PNGs
+- [x] Add a PNG/manifest staging validator
+- [x] Add GitHub Actions render, validation, and review-artifact workflow
+- [ ] Run the asset preparation script locally and inspect generated PNGs
+- [ ] Review the first successful CI artifact
 - [ ] Verify PS4 custom-theme format and metadata for the target firmware
 - [ ] Confirm wallpaper, icon, preview, and audio formats, dimensions, and limits
 - [x] Create a Tenna-inspired TV TIME home-screen wallpaper concept (SVG source master)
