@@ -4,7 +4,7 @@
 
 A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHEN reported). The goal is a broadcast-themed home-screen experience with wallpaper, matching theme assets, and dynamic effects only where the platform supports them.
 
-> The repository now includes original artwork and a reproducible PNG asset-staging script. It does **not** yet contain a tested or installable PS4 theme package.
+> The repository now includes original artwork and a reproducible PNG asset-staging pipeline. It does **not** yet contain a tested or installable PS4 theme package.
 
 ## Vision
 - Tenna-inspired TV TIME home-screen wallpaper (default concept), with a Deltarune broadcast aesthetic and menu-safe left-side composition.
@@ -17,9 +17,12 @@ A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHE
 ## Packaging preparation
 - [Packaging readiness and staging instructions](docs/PACKAGING-READINESS.md)
 - [Asset preparation script](tools/prepare_assets.py)
+- [Staging validator](tools/validate_staging.py)
 - Install the Python asset-rendering dependencies with `python -m pip install -r requirements-packaging.txt`.
 - Run `python tools/prepare_assets.py` to generate a reviewable staging tree under `build/tv-time/Image0/`.
-- The script does not generate metadata or a `.pkg`; final packaging remains blocked on validation of the selected theme builder, theme descriptor, SFO metadata, and package toolchain.
+- Run `python tools/validate_staging.py` to check the expected PNGs, dimensions, manifest entries, and SHA-256 hashes.
+- GitHub Actions runs the same render-and-validate process and uploads a short-lived review artifact named `tv-time-staging-assets`.
+- The scripts do not generate metadata or a `.pkg`; final packaging remains blocked on validation of the selected theme builder, theme descriptor, SFO metadata, and package toolchain.
 
 ## Target
 | Item | Target |
