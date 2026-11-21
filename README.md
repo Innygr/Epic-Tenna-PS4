@@ -4,7 +4,7 @@
 
 A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHEN reported). The goal is a broadcast-themed home-screen experience with wallpaper, matching theme assets, and dynamic effects only where the platform supports them.
 
-> Development scaffold only. This repository does not yet contain a tested or installable PS4 theme package.
+> The repository now includes original artwork and a reproducible PNG asset-staging script. It does **not** yet contain a tested or installable PS4 theme package.
 
 ## Vision
 - Tenna-inspired TV TIME home-screen wallpaper (default concept), with a Deltarune broadcast aesthetic and menu-safe left-side composition.
@@ -13,6 +13,13 @@ A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHE
 - CRT scanlines, signal noise, channel markers, neon panels, and television motifs.
 - Wallpaper, icon, and optional audio assets.
 - Research verified PS4 theme capabilities before promising animated wallpaper or launch transitions.
+
+## Packaging preparation
+- [Packaging readiness and staging instructions](docs/PACKAGING-READINESS.md)
+- [Asset preparation script](tools/prepare_assets.py)
+- Install the Python asset-rendering dependencies with `python -m pip install -r requirements-packaging.txt`.
+- Run `python tools/prepare_assets.py` to generate a reviewable staging tree under `build/tv-time/Image0/`.
+- The script does not generate metadata or a `.pkg`; final packaging remains blocked on validation of the selected theme builder, theme descriptor, SFO metadata, and package toolchain.
 
 ## Target
 | Item | Target |
@@ -23,7 +30,7 @@ A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHE
 | Theme | TV TIME |
 
 ## Status
-Phase 0: project scaffold and visual direction. See [docs/ROADMAP.md](docs/ROADMAP.md).
+Artwork and asset staging are in progress. See [docs/ROADMAP.md](docs/ROADMAP.md) and [docs/PACKAGING-READINESS.md](docs/PACKAGING-READINESS.md).
 
 ## Safety and compatibility
 - Keep the console's current firmware documented; do not update solely for this project.
