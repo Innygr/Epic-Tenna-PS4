@@ -13,7 +13,9 @@
 ## Phase 1 — Static theme
 - [ ] Verify PS4 custom-theme format and metadata for the target firmware
 - [ ] Confirm wallpaper, icon, and audio formats, dimensions, and limits
-- [ ] Create the home-screen wallpaper export and preview
+- [x] Create a Tenna-inspired TV TIME home-screen wallpaper concept (SVG source master)
+- [ ] Export and preview the home-screen wallpaper in the verified PS4 format
+- [ ] Decide whether to retain the simpler title-card wallpaper as an alternate
 - [ ] Design matching system icon artwork
 - [ ] Set the built-in theme colour fallback to red or gold, based on console preview
 - [x] Create an original static red/yellow system-background concept master (PS4 export/validation still pending)
