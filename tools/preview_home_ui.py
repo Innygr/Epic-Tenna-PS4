@@ -43,7 +43,7 @@ def main() -> int:
     draw.text((1480, 67), "14:02     ◉  ONLINE", font=small_font, fill=(255, 212, 0, 240))
 
     # A subtle translucent shelf mimics the visual weight of the home-screen row.
-    draw.rounded_rectangle((70, 495, 1850, 790), radius=28, fill=(8, 5, 8, 105),
+    draw.rounded_rectangle((70, 645, 1850, 940), radius=28, fill=(8, 5, 8, 105),
                            outline=(255, 212, 0, 95), width=2)
 
     apps = [
@@ -53,7 +53,7 @@ def main() -> int:
         ("S", "SETTINGS", (45, 32, 34, 235)),
         ("N", "NETWORK", (45, 32, 34, 235)),
     ]
-    start_x, y, size, gap = 120, 535, 164, 28
+    start_x, y, size, gap = 120, 685, 164, 28
     for index, (glyph, label, colour) in enumerate(apps):
         x = start_x + index * (size + gap)
         selected = index == 0
@@ -67,7 +67,7 @@ def main() -> int:
         if selected:
             draw.rounded_rectangle((x - 9, y - 9, x + size + 9, y + size + 9),
                                    radius=28, outline=(255, 212, 0, 210), width=3)
-    draw.text((125, 745), "Illustrative overlay only — not an exact PS4 UI capture",
+    draw.text((125, 895), "Illustrative overlay only — not an exact PS4 UI capture",
               font=label_font, fill=(255, 246, 222, 190))
 
     # Footer is deliberately understated to keep attention on UI contrast.
