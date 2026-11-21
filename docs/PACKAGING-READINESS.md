@@ -36,7 +36,7 @@ The validator checks all 12 expected PNGs, formats, dimensions, manifest metadat
 ## Remaining questions
 - [x] Generate and inspect initial artwork contact sheet.
 - [x] Add illustrative home-screen overlay preview.
-- [ ] Review overlay preview and adjust wallpaper if important text is obscured.
+- [x] Review overlay preview; move the illustrative app shelf lower so Tenna's face and main title remain unobstructed.
 - [ ] Confirm theme format and export limits against maintained references and target-console compatibility.
 - [ ] Decide whether static function-screen background is sufficient; animated SVG is source artwork, not a console-ready animation.
 - [ ] Confirm correct slots for Network and Media.
