@@ -7,7 +7,8 @@ A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHE
 > Development scaffold only. This repository does not yet contain a tested or installable PS4 theme package.
 
 ## Vision
-- TV TIME title-card home-screen composition.
+- Tenna-inspired TV TIME home-screen wallpaper (default concept), with a Deltarune broadcast aesthetic and menu-safe left-side composition.
+- Alternate option: a simpler TV TIME title-card wallpaper.
 - Broadcast red and signal yellow over near-black, with warm-white text. Purple/cyan are reserved for optional alternate variants.
 - CRT scanlines, signal noise, channel markers, neon panels, and television motifs.
 - Wallpaper, icon, and optional audio assets.
