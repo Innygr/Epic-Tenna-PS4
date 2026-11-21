@@ -2,6 +2,16 @@
 
 This document separates verified project requirements from items that still need validation on the target console.
 
+## TV TIME base palette
+
+The default theme is **red and yellow**, not purple and cyan:
+- Broadcast red: `#ED1C24`
+- Signal yellow: `#FFD400`
+- Near-black background: `#100707`
+- Warm white text: `#FFF8E5`
+
+Use red for major frames, active states, and ON AIR indicators. Use yellow for titles, channel labels, separators, and highlights. Near-black provides contrast. Purple/cyan may appear only in a separately named alternate theme, not in the default build.
+
 ## Static theme first
 
 The first deliverable is a conventional static custom theme. Do not package or install anything until the format, required metadata, asset dimensions, and installation path have been checked against a reliable PS4 theme specification and the exact target firmware.
@@ -37,4 +47,4 @@ A theme alone should not be assumed to intercept game-launch events or play a cu
 
 ## Current status
 
-No installable package has been built or tested yet. The repository currently contains original visual concept artwork and documentation only.
+No installable package has been built or tested yet. The repository contains original visual concept artwork and documentation only.
