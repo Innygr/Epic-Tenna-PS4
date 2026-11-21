@@ -11,16 +11,21 @@
 - [x] Specify the red/yellow system-background requirement separately from wallpaper
 
 ## Phase 1 — Static theme
+- [x] Document a provisional staging tree and packaging blockers
+- [x] Add a reproducible SVG-to-PNG asset staging script
+- [x] Add a red/yellow TV TIME theme-list icon master
+- [ ] Run the asset preparation script and inspect generated PNGs
 - [ ] Verify PS4 custom-theme format and metadata for the target firmware
-- [ ] Confirm wallpaper, icon, and audio formats, dimensions, and limits
+- [ ] Confirm wallpaper, icon, preview, and audio formats, dimensions, and limits
 - [x] Create a Tenna-inspired TV TIME home-screen wallpaper concept (SVG source master)
 - [ ] Export and preview the home-screen wallpaper in the verified PS4 format
 - [ ] Decide whether to retain the simpler title-card wallpaper as an alternate
 - [x] Create six matching system icon artwork masters (Settings, Network, Friends, Messages, Media, Power)
-- [ ] Export icons to the verified PS4 formats and map them to the correct theme metadata
+- [ ] Export icons to verified PS4 formats and map them to correct theme slots
 - [ ] Set the built-in theme colour fallback to red or gold, based on console preview
 - [x] Create an original static red/yellow system-background concept master (PS4 export/validation still pending)
 - [ ] Prepare optional background music and sound effects, subject to format/size constraints
+- [ ] Create and validate theme.xml and param.sfo using the selected toolchain
 - [ ] Build a package using a documented, trusted toolchain
 - [ ] Validate package contents before console testing
 
