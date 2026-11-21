@@ -6,11 +6,26 @@ This document separates verified project requirements from items that still need
 
 The default theme is **red and yellow**, not purple and cyan:
 - Broadcast red: `#ED1C24`
+- Deep red: `#760D12`
 - Signal yellow: `#FFD400`
+- Warm highlight: `#FFF08A`
 - Near-black background: `#100707`
 - Warm white text: `#FFF8E5`
 
-Use red for major frames, active states, and ON AIR indicators. Use yellow for titles, channel labels, separators, and highlights. Near-black provides contrast. Purple/cyan may appear only in a separately named alternate theme, not in the default build.
+Use red for major frames, active states, and ON AIR indicators. Use yellow for titles, channel labels, separators, and highlights. Purple/cyan may appear only in a separately named alternate theme, not in the default build.
+
+## Separate system background and wallpaper
+
+The requested red/yellow Flow-style background is a separate deliverable from the TV TIME wallpaper.
+
+The PS4 theme format exposes a built-in `themecolor` preset. Documented choices include blue, pink, red, navy, dark gray, gold, light steel blue, and purple. It selects one built-in colour; it does not create a custom red/yellow gradient by itself.
+
+- Fallback: use the built-in red or gold preset, chosen after previewing on the console.
+- Target: create an original red-and-yellow flowing background scene, subject to verification of the dynamic-theme scene format and target firmware.
+- Static fallback: create a red/yellow background image if a dynamic scene cannot be validated.
+- Keep the title-card wallpaper as a separate asset.
+
+See [System Background Design](SYSTEM-BACKGROUND-DESIGN.md) for the specific visual target and research references.
 
 ## Static theme first
 
@@ -18,6 +33,7 @@ The first deliverable is a conventional static custom theme. Do not package or i
 
 Expected asset groups:
 - Home-screen wallpaper.
+- Separate system background image or dynamic scene.
 - System icon artwork in the exact formats and dimensions required by the theme format.
 - Optional theme background audio, encoded to the supported format and within documented size limits.
 - Theme metadata and preview artwork.
@@ -27,8 +43,8 @@ Expected asset groups:
 Do not assume that a GIF, MP4, animated SVG, or web page can be used directly as a PS4 theme wallpaper. The native theme format may support predefined dynamic-theme resources, but that is not equivalent to arbitrary video playback.
 
 Research questions:
-1. Which dynamic theme resource types are accepted by the PS4 theme format?
-2. Can a user-created dynamic theme be authored with a documented toolchain?
+1. Which dynamic theme scene resources are accepted by the PS4 theme format?
+2. Can an original Flow-style red/yellow scene be authored with a documented toolchain?
 3. Does the target firmware accept the resulting package?
 4. Does the animation persist after a normal reboot and after GoldHEN is no longer active?
 
@@ -47,4 +63,4 @@ A theme alone should not be assumed to intercept game-launch events or play a cu
 
 ## Current status
 
-No installable package has been built or tested yet. The repository contains original visual concept artwork and documentation only.
+The red/yellow system-background design requirement is documented. No installable package or custom animated system background has been built or tested yet. The repository contains original visual concept artwork and documentation only.
