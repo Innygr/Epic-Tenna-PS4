@@ -28,10 +28,14 @@ jobs:
         run: python tools/prepare_assets.py --output "$RUNNER_TEMP/tv-time/Image0"
       - name: Validate images and manifest
         run: python tools/validate_staging.py --staging "$RUNNER_TEMP/tv-time/Image0"
+      - name: Create visual review sheet
+        run: python tools/make_review_sheet.py --staging "$RUNNER_TEMP/tv-time/Image0" --output "$RUNNER_TEMP/tv-time/tv-time-review-sheet.png"
       - name: Upload reviewable staging assets
         uses: actions/upload-artifact@v4
         with:
           name: tv-time-staging-assets
-          path: ${{ runner.temp }}/tv-time/Image0/
+          path: |
+            ${{ runner.temp }}/tv-time/Image0/
+            ${{ runner.temp }}/tv-time/tv-time-review-sheet.png
           if-no-files-found: error
           retention-days: 7
