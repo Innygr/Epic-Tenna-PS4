@@ -28,7 +28,7 @@ jobs:
         run: python tools/generate_home_bgm.py --output "$RUNNER_TEMP/tv-time/sound/bgm_home.wav"
       - name: Validate generated home music
         run: |
-          python - <<'PY'
+          python - "$RUNNER_TEMP/tv-time/sound/bgm_home.wav" <<'PY'
           import wave, sys
           path = sys.argv[1]
           with wave.open(path, 'rb') as audio:
@@ -38,7 +38,6 @@ jobs:
               assert 31.9 <= audio.getnframes() / audio.getframerate() <= 32.1
               print('PASS:', audio.getparams())
           PY
-          "$RUNNER_TEMP/tv-time/sound/bgm_home.wav"
       - name: Validate images and manifest
         run: python tools/validate_staging.py --staging "$RUNNER_TEMP/tv-time/Image0"
       - name: Create visual review sheet
