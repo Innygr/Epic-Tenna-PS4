@@ -21,3 +21,9 @@ Keep a source/credit note for every third-party image, font, sound, and other as
 - Red/yellow Flow-style system background concept: `tv-time-system-background-red-yellow-v0.1.svg` (1920×1080 SVG master).
 - This is separate from the TV TIME title-card wallpaper.
 - It is an original static concept master, not yet converted to or validated as a PS4 theme resource.
+
+
+## Animated system background source
+- `tv-time-flow-motion-study.svg` is a looping, 1920×1080 animated SVG motion study for the red/yellow Flow-style system background.
+- It is a visual source master only. The PS4 does not install this SVG directly; the scene must be rendered into supported frames and assembled into the PS4 background-scene format.
+- Keep this source separate from the static fallback and title-card wallpaper.
