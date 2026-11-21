@@ -15,3 +15,9 @@
 
 ## Credits and licensing
 Keep a source/credit note for every third-party image, font, sound, and other asset. Prefer original artwork and properly licensed resources. Do not commit ripped game assets or copyrighted soundtrack files without permission.
+
+
+## System background master
+- Red/yellow Flow-style system background concept: `tv-time-system-background-red-yellow-v0.1.svg` (1920×1080 SVG master).
+- This is separate from the TV TIME title-card wallpaper.
+- It is an original static concept master, not yet converted to or validated as a PS4 theme resource.
