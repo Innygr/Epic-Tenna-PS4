@@ -16,7 +16,8 @@
 - [x] Create a Tenna-inspired TV TIME home-screen wallpaper concept (SVG source master)
 - [ ] Export and preview the home-screen wallpaper in the verified PS4 format
 - [ ] Decide whether to retain the simpler title-card wallpaper as an alternate
-- [ ] Design matching system icon artwork
+- [x] Create six matching system icon artwork masters (Settings, Network, Friends, Messages, Media, Power)
+- [ ] Export icons to the verified PS4 formats and map them to the correct theme metadata
 - [ ] Set the built-in theme colour fallback to red or gold, based on console preview
 - [x] Create an original static red/yellow system-background concept master (PS4 export/validation still pending)
 - [ ] Prepare optional background music and sound effects, subject to format/size constraints
