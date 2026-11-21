@@ -55,7 +55,7 @@ The review-sheet generator assembles the wallpaper, system background, theme ico
 
 ## Remaining design and compatibility questions
 
-- [ ] Review the generated contact sheet for composition, contrast, transparency, and icon readability.
+- [x] Review the generated contact sheet for composition, contrast, transparency, and icon readability; the current staging images render cleanly.
 - [ ] Confirm the exact theme format and export limits against a maintained, trustworthy reference and the target console's compatibility.
 - [ ] Decide whether the static function-screen background is sufficient; animated SVG is source artwork, not a console-ready animation.
 - [ ] Confirm whether a separate, supported dynamic scene format is appropriate before investing in frame conversion.
