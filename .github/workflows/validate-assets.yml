@@ -1,0 +1,37 @@
+name: Validate TV TIME asset staging
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Cairo runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes libcairo2
+      - name: Install asset dependencies
+        run: python -m pip install -r requirements-packaging.txt
+      - name: Render staging assets
+        run: python tools/prepare_assets.py --output "$RUNNER_TEMP/tv-time/Image0"
+      - name: Validate images and manifest
+        run: python tools/validate_staging.py --staging "$RUNNER_TEMP/tv-time/Image0"
+      - name: Upload reviewable staging assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: tv-time-staging-assets
+          path: ${{ runner.temp }}/tv-time/Image0/
+          if-no-files-found: error
+          retention-days: 7
