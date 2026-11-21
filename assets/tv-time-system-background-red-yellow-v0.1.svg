@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#65090d"/>
+      <stop offset=".48" stop-color="#a10e16"/>
+      <stop offset="1" stop-color="#3d080c"/>
+    </linearGradient>
+    <linearGradient id="redWave" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f52b32"/>
+      <stop offset=".55" stop-color="#c91520"/>
+      <stop offset="1" stop-color="#790b12"/>
+    </linearGradient>
+    <linearGradient id="goldWave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffb900"/>
+      <stop offset=".5" stop-color="#ffe34d"/>
+      <stop offset="1" stop-color="#ffbd18"/>
+    </linearGradient>
+    <linearGradient id="goldShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff18a" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#ffb900" stop-opacity=".08"/>
+    </linearGradient>
+    <radialGradient id="warmGlow">
+      <stop offset="0" stop-color="#ffca26" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#ffca26" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="42"/></filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#base)"/>
+  <ellipse cx="1370" cy="250" rx="680" ry="420" fill="url(#warmGlow)"/>
+  <path d="M-120 790 C220 590 410 590 690 700 C990 820 1110 990 1430 850 C1650 755 1790 580 2050 600 L2050 1180 L-120 1180Z" fill="#4b080d" opacity=".55"/>
+  <path d="M-120 680 C180 500 420 475 690 585 C930 685 1110 850 1390 745 C1640 650 1790 430 2050 470 L2050 1180 L-120 1180Z" fill="url(#redWave)"/>
+  <path d="M-100 735 C190 565 405 555 650 650 C910 750 1090 920 1380 805 C1630 705 1800 520 2040 545" fill="none" stroke="#ff4a3f" stroke-width="9" opacity=".55"/>
+  <path d="M-100 560 C180 390 440 365 700 465 C950 560 1110 730 1390 620 C1650 515 1810 340 2040 370 C1790 445 1640 650 1375 740 C1080 840 900 680 665 585 C415 485 190 500 -100 675Z" fill="url(#goldWave)"/>
+  <path d="M-100 560 C180 390 440 365 700 465 C950 560 1110 730 1390 620 C1650 515 1810 340 2040 370" fill="none" stroke="#fff2a0" stroke-width="5" opacity=".85"/>
+  <path d="M-120 600 C190 430 435 410 690 510 C945 610 1110 770 1395 665 C1640 575 1810 390 2050 420" fill="none" stroke="#ffef85" stroke-width="2" opacity=".65"/>
+  <path d="M-100 860 C200 690 420 680 665 770 C930 870 1110 1010 1400 900 C1650 805 1800 650 2040 670" fill="none" stroke="#ffcf35" stroke-width="4" opacity=".45"/>
+  <path d="M-100 905 C210 735 430 735 670 820 C930 910 1110 1050 1400 945 C1640 860 1800 710 2040 725" fill="none" stroke="#ffed8c" stroke-width="2" opacity=".35"/>
+  <ellipse cx="980" cy="500" rx="700" ry="310" fill="#ffb900" opacity=".08" filter="url(#soft)"/>
+  <g fill="#fff1a8" opacity=".16">
+    <circle cx="230" cy="250" r="3"/><circle cx="510" cy="190" r="2"/><circle cx="1540" cy="245" r="3"/><circle cx="1770" cy="170" r="2"/>
+  </g>
+</svg>
