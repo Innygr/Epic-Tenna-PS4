@@ -23,7 +23,8 @@
 
 ## Phase 2 — Dynamic presentation research
 - [ ] Confirm the supported dynamic-theme scene format and target-firmware compatibility
-- [ ] Prototype the red/yellow Flow-style wave as a custom scene
+- [x] Create a looping red/yellow animated SVG motion study (source master only)
+- [ ] Render the motion study into a supported frame sequence and assemble the PS4 scene
 - [ ] Determine whether the desired channel-switch effect can run in a theme or requires a separate homebrew application
 - [ ] Document reboot/persistence limitations and firmware compatibility
 
