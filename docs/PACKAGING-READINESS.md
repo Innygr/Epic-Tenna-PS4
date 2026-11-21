@@ -2,7 +2,7 @@
 
 ## Scope
 
-This repository is preparing the source assets for a PS4 system-software theme. The current work can create a **staging asset tree** from the original SVG masters. It does not create, sign, or install a PS4 `.pkg`.
+This repository is preparing the source assets for a PS4 system-software theme. The current work can create a **staging asset tree** from the original SVG masters and validate the resulting PNGs and manifest. It does not create, sign, or install a PS4 `.pkg`.
 
 A final package still requires a verified theme descriptor, SFO metadata, a compatible packaging toolchain, and a validation pass on the resulting package. Do not treat an asset staging folder or ZIP as an installable theme.
 
@@ -40,6 +40,7 @@ Requirements: Python 3.10+, Pillow, and CairoSVG.
 ```bash
 python -m pip install -r requirements-packaging.txt
 python tools/prepare_assets.py
+python tools/validate_staging.py
 ```
 
 Use `--force` only when intentionally replacing the existing staging directory:
@@ -48,18 +49,23 @@ Use `--force` only when intentionally replacing the existing staging directory:
 python tools/prepare_assets.py --force
 ```
 
-The script:
+The preparation script:
 - renders the original SVG masters to PNG;
 - creates four mapped function icons and soft focus variants;
 - writes a staging manifest with output dimensions, colour modes, byte sizes, and SHA-256 hashes;
 - refuses to overwrite an existing staging directory unless `--force` is supplied.
 
-It does not fetch tools, execute third-party binaries, create SFO metadata, or build a package.
+The validator checks all 12 expected PNGs, their file format and dimensions, manifest metadata, and SHA-256 hashes. It also checks that the manifest clearly labels the output as staging-only and says no installable package was generated.
+
+A GitHub Actions workflow runs both scripts on pushes, pull requests, and manual dispatch. It uploads a `tv-time-staging-assets` artifact for review; the artifact is temporary and contains only staging assets, not an installable package.
+
+The scripts do not fetch tools, execute third-party binaries, create SFO metadata, or build a package.
 
 ## Still required before packaging
 
-- [ ] Run the asset preparation script and inspect every PNG.
-- [ ] Confirm the selected PS4 theme builder's exact paths, dimensions, XML schema, icon slot names, colour modes, and preview dimensions.
+- [ ] Run the asset preparation and validation scripts locally and inspect every PNG.
+- [ ] Review the first successful CI artifact and confirm the image composition, transparency, icon glow, and colour treatment.
+- [ ] Confirm the selected PS4 theme builder's exact paths, dimensions, XML schema, icon slot names, colour modes, preview dimensions, and file-size limits.
 - [ ] Decide whether the static function-screen background or the dynamic RAF scene is the final background path. Do not include both unless the selected builder explicitly supports that combination.
 - [ ] Confirm the theme's title/provider/version fields and create valid theme `param.sfo` metadata.
 - [ ] Create `theme.xml` from the verified schema and select the red built-in theme colour as the fallback.
