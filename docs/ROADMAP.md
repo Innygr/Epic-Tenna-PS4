@@ -20,7 +20,7 @@
 - [x] Add a labelled visual review sheet generator
 - [x] Add GitHub Actions render, validation, and review-artifact workflow
 - [x] Review first generated staging images and confirm they render
-- [ ] Review updated CI contact sheet after workflow change
+- [x] Review updated CI contact sheet after workflow change
 - [ ] Confirm all icon slots and final export dimensions against selected supported format
 - [ ] Check wallpaper and background readability with UI overlays
 
