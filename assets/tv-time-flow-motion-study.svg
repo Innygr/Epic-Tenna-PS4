@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <title>TV TIME — red and yellow Flow motion study</title>
+  <desc>Original looping motion study for the red and yellow PS4 system background. This animated SVG is a visual source, not a PS4-ready RAF scene.</desc>
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#65090d"/><stop offset=".5" stop-color="#a10e16"/><stop offset="1" stop-color="#3d080c"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffb900"/><stop offset=".5" stop-color="#ffe34d"/><stop offset="1" stop-color="#ffbd18"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f52b32"/><stop offset=".55" stop-color="#c91520"/><stop offset="1" stop-color="#790b12"/>
+    </linearGradient>
+    <radialGradient id="glow"><stop stop-color="#ffca26" stop-opacity=".28"/><stop offset="1" stop-color="#ffca26" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#base)"/>
+  <ellipse cx="1370" cy="250" rx="680" ry="420" fill="url(#glow)"/>
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 -18;0 0;0 14;0 0" keyTimes="0;.25;.5;.75;1" dur="12s" repeatCount="indefinite"/>
+    <path d="M-120 790 C220 590 410 590 690 700 C990 820 1110 990 1430 850 C1650 755 1790 580 2050 600 L2050 1180 L-120 1180Z" fill="#4b080d" opacity=".62"/>
+    <path d="M-120 680 C180 500 420 475 690 585 C930 685 1110 850 1390 745 C1640 650 1790 430 2050 470 L2050 1180 L-120 1180Z" fill="url(#red)"/>
+    <path d="M-100 560 C180 390 440 365 700 465 C950 560 1110 730 1390 620 C1650 515 1810 340 2040 370 C1790 445 1640 650 1375 740 C1080 840 900 680 665 585 C415 485 190 500 -100 675Z" fill="url(#gold)"/>
+    <path d="M-100 560 C180 390 440 365 700 465 C950 560 1110 730 1390 620 C1650 515 1810 340 2040 370" fill="none" stroke="#fff2a0" stroke-width="5" opacity=".85"/>
+  </g>
+  <g opacity=".65" fill="none" stroke="#ffed8c">
+    <path d="M-100 860 C200 690 420 680 665 770 C930 870 1110 1010 1400 900 C1650 805 1800 650 2040 670" stroke-width="4"/>
+    <path d="M-100 905 C210 735 430 735 670 820 C930 910 1110 1050 1400 945 C1640 860 1800 710 2040 725" stroke-width="2" opacity=".55"/>
+  </g>
+</svg>
