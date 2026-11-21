@@ -38,6 +38,12 @@ Expected asset groups:
 - Optional theme background audio, encoded to the supported format and within documented size limits.
 - Theme metadata and preview artwork.
 
+## Dynamic background production target
+
+The repository now includes `assets/tv-time-flow-motion-study.svg`, a looping animated SVG motion study. It is not itself a PS4 theme resource. The PS4 theme scene format uses a `scene/background.raf/` directory with DXT1a DDS frames, a plane model, and an `index.xml` scene description. A current community theme-builder documents a limit of 48 frames and 6 MiB total for the DDS frames; its example trade-off is 24 frames at 960×540 or 48 frames at 640×360. Treat these as builder-specific validation targets, not a universal guarantee.
+
+Initial export target: 24 frames at 960×540, with a slow seamless loop. Validate frame weight, playback timing, and compatibility before packaging. The SVG remains the editable visual master.
+
 ## Dynamic background investigation
 
 Do not assume that a GIF, MP4, animated SVG, or web page can be used directly as a PS4 theme wallpaper. The native theme format may support predefined dynamic-theme resources, but that is not equivalent to arbitrary video playback.
