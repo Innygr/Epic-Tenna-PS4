@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#25104b"/><stop offset="1" stop-color="#071c35"/>
+    </linearGradient>
+    <linearGradient id="neon"><stop stop-color="#ff55d8"/><stop offset=".52" stop-color="#9c65ff"/><stop offset="1" stop-color="#48edff"/></linearGradient>
+    <pattern id="scan" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 0H5" stroke="#d8fbff" stroke-opacity=".12" stroke-width="1.5"/></pattern>
+  </defs>
+  <rect x="28" y="54" width="456" height="404" rx="76" fill="#080711" stroke="url(#neon)" stroke-width="12"/>
+  <rect x="49" y="75" width="414" height="362" rx="56" fill="url(#glass)" stroke="#54eaff" stroke-opacity=".65" stroke-width="4"/>
+  <rect x="49" y="75" width="414" height="362" rx="56" fill="url(#scan)"/>
+  <path d="M176 40 256 91 336 40" fill="none" stroke="#8c6aff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="256" cy="190" r="67" fill="none" stroke="url(#neon)" stroke-width="12"/>
+  <path d="M239 148 302 190 239 232Z" fill="#f7f4ff"/>
+  <text x="256" y="315" text-anchor="middle" font-family="Arial,sans-serif" font-size="48" font-weight="900" letter-spacing="5" fill="#fff">ETN</text>
+  <text x="256" y="359" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="700" letter-spacing="4" fill="#67efff">BROADCAST</text>
+  <circle cx="102" cy="397" r="8" fill="#ff315e"/>
+  <text x="122" y="404" font-family="Arial,sans-serif" font-size="16" font-weight="700" letter-spacing="3" fill="#ff789b">ON AIR</text>
+  <text x="410" y="404" text-anchor="end" font-family="Arial,sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#79edff">CH 01</text>
+</svg>
