@@ -25,27 +25,33 @@ Image0/
       power.png                     # generated from icons/power.svg
       <name>_glow.png               # generated focus/glow variants
   sce_sys/
-    icon0.png                       # theme-list icon, from ETN broadcast mark
+    icon0.png                       # theme-list icon, from tv-time-theme-icon.svg
     param.sfo                        # not generated; requires verified theme metadata
 ```
 
-The theme format research source describes a 1920×1080 home/function background, 128×128 function icons, 512×512 content icons, and a 512×512 theme-list icon. A separate recent theme-builder documents a 152×152 function-icon glow image and a 740×416 preview. These values are treated as the selected builder's export profile, not a claim that every PS4 firmware or toolchain has identical requirements. Confirm them against the exact builder and target firmware before package creation.
+The PS4 Developer Wiki describes the theme feature set. A recent community theme-builder documents this staging layout and a 740×416 preview, while the GlitchMod guide lists a 1920×1080 preview and different icon export details. Those differences are why the dimensions in the script are a **provisional builder profile**, not a universal guarantee. Confirm the selected builder's exact paths, dimensions, colour modes, and limits before packaging.
 
-The six concept icons are not six interchangeable PS4 function slots. The staging script maps only the four known function concepts to the conventional `setting`, `friend`, `message`, and `power` slots. Unprovided slots retain the system defaults. Network and Media remain source artwork until their correct content/function slot mapping is decided.
+The six concept icons are not six interchangeable PS4 function slots. The staging script maps only four concepts to the conventional `setting`, `friend`, `message`, and `power` slots. Unprovided slots retain system defaults. Network and Media remain source artwork until their correct content/function slot mapping is decided.
 
 ## Generate staging assets
 
 Requirements: Python 3.10+, Pillow, and CairoSVG.
 
 ```bash
-python -m pip install Pillow CairoSVG
+python -m pip install -r requirements-packaging.txt
 python tools/prepare_assets.py
+```
+
+Use `--force` only when intentionally replacing the existing staging directory:
+
+```bash
+python tools/prepare_assets.py --force
 ```
 
 The script:
 - renders the original SVG masters to PNG;
-- creates the four mapped function icons and soft focus variants;
-- writes a staging manifest with source paths, output dimensions, and SHA-256 hashes;
+- creates four mapped function icons and soft focus variants;
+- writes a staging manifest with output dimensions, colour modes, byte sizes, and SHA-256 hashes;
 - refuses to overwrite an existing staging directory unless `--force` is supplied.
 
 It does not fetch tools, execute third-party binaries, create SFO metadata, or build a package.
@@ -53,18 +59,18 @@ It does not fetch tools, execute third-party binaries, create SFO metadata, or b
 ## Still required before packaging
 
 - [ ] Run the asset preparation script and inspect every PNG.
-- [ ] Confirm the selected PS4 theme builder's exact paths, dimensions, XML schema, icon slot names, and preview dimensions.
+- [ ] Confirm the selected PS4 theme builder's exact paths, dimensions, XML schema, icon slot names, colour modes, and preview dimensions.
 - [ ] Decide whether the static function-screen background or the dynamic RAF scene is the final background path. Do not include both unless the selected builder explicitly supports that combination.
 - [ ] Confirm the theme's title/provider/version fields and create valid theme `param.sfo` metadata.
 - [ ] Create `theme.xml` from the verified schema and select the red built-in theme colour as the fallback.
-- [ ] Validate that generated PNGs meet the selected toolchain's colour mode, alpha, and file-size constraints.
+- [ ] Validate generated PNGs against the selected toolchain's alpha and file-size constraints.
 - [ ] Build with a legitimate, locally installed packaging toolchain whose provenance and compatibility are known. Proprietary Sony packaging binaries are not included in this repository.
-- [ ] Run the package validator and inspect the package contents before any console test.
+- [ ] Run the package validator and inspect package contents before any console test.
 - [ ] Test installation, application, reboot behaviour, and removal on the documented target firmware.
 
 ## Important limitations
 
-- The animated SVG motion study is source artwork, not a PS4 scene. Dynamic RAF scene export remains a separate, uncompleted task.
+- The animated SVG motion study is source artwork, not a PS4 scene. Dynamic RAF scene export remains uncompleted.
 - The Tenna-inspired wallpaper is original project artwork; no game-ripped assets or soundtrack are bundled.
 - The game-launch channel-switch effect is not part of a normal theme asset package.
 - A community tool's reported package behaviour is not a guarantee for every firmware. The target console's reported firmware remains 14.02; do not update it solely to make this project work.
