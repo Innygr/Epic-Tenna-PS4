@@ -3,7 +3,8 @@
 ## Visual direction
 - Primary title: **TV TIME**
 - Secondary identity: **TENNA BROADCAST NETWORK**
-- Palette: midnight violet, electric cyan, magenta, and small red ON AIR accents.
+- **Base theme palette: red and yellow.** Use near-black/charcoal for contrast, broadcast red for major frames and ON AIR indicators, and bright signal yellow for titles, highlights, and channel graphics.
+- Suggested core colours: broadcast red `#ED1C24`, signal yellow `#FFD400`, near-black `#100707`, warm white `#FFF8E5`.
 - Motifs: CRT scanlines, signal noise, broadcast frames, channel numbers, television glass.
 
 ## Planned deliverables
