@@ -16,7 +16,7 @@
 - [ ] Create the home-screen wallpaper export and preview
 - [ ] Design matching system icon artwork
 - [ ] Set the built-in theme colour fallback to red or gold, based on console preview
-- [ ] Create a static red/yellow system-background fallback
+- [x] Create an original static red/yellow system-background concept master (PS4 export/validation still pending)
 - [ ] Prepare optional background music and sound effects, subject to format/size constraints
 - [ ] Build a package using a documented, trusted toolchain
 - [ ] Validate package contents before console testing
