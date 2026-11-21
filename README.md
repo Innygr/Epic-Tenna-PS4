@@ -8,7 +8,7 @@ A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHE
 
 ## Vision
 - TV TIME title-card home-screen composition.
-- Midnight violet, electric cyan, magenta, and restrained red ON AIR accents.
+- Broadcast red and signal yellow over near-black, with warm-white text. Purple/cyan are reserved for optional alternate variants.
 - CRT scanlines, signal noise, channel markers, neon panels, and television motifs.
 - Wallpaper, icon, and optional audio assets.
 - Research verified PS4 theme capabilities before promising animated wallpaper or launch transitions.
