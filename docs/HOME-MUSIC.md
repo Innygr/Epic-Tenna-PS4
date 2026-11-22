@@ -14,7 +14,7 @@ python tools/generate_home_bgm.py --output build/tv-time/sound/bgm_home.wav
 ```
 
 The master is 32 seconds, stereo, 48 kHz, 16-bit PCM WAV, with symmetric 25 ms fades at the start and end. The edge samples meet at digital silence; this reduces a hard wrap click but is not a true overlapping crossfade, so the final loop still needs listening tests after ATRAC9 conversion. GitHub Actions generates it and validates its channel count, sample
-width, sample rate, and duration.
+width, sample rate, duration, and non-duplicated stereo content with balanced channel levels.
 
 ## Convert to the PS4 theme format
 
