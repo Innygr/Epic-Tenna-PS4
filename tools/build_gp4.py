@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
+import json
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path, PurePosixPath
@@ -84,10 +86,23 @@ def build_gp4_xml(
 
     try:
         validate_theme_xml(theme_path.read_text(encoding="utf-8"))
-        sfo_values = validate_param_sfo(sfo_path.read_bytes())
-    except (ValueError, ParamSfoError) as exc:
+        sfo_binary = sfo_path.read_bytes()
+        sfo_values = validate_param_sfo(sfo_binary)
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (ValueError, ParamSfoError, json.JSONDecodeError) as exc:
         raise Gp4Error(f"staging metadata failed validation: {exc}") from exc
+    if manifest.get("status") != "theme-staging-only; not an installable package":
+        raise Gp4Error("staging manifest does not identify a theme staging tree")
+    package_meta = manifest.get("package_metadata", {})
+    if package_meta.get("included") is not True or package_meta.get("path") != "sce_sys/param.sfo":
+        raise Gp4Error("staging manifest does not declare the supplied binary param.sfo")
+    if package_meta.get("bytes") != len(sfo_binary):
+        raise Gp4Error("staging manifest param.sfo byte count does not match")
+    if package_meta.get("sha256") != hashlib.sha256(sfo_binary).hexdigest():
+        raise Gp4Error("staging manifest param.sfo SHA-256 does not match")
     content_id = sfo_values.get("CONTENT_ID", "")
+    if package_meta.get("content_id") != content_id or package_meta.get("title_id") != sfo_values.get("TITLE_ID"):
+        raise Gp4Error("staging manifest package identity does not match param.sfo")
     if not CONTENT_ID_RE.fullmatch(content_id):
         raise Gp4Error("staged param.sfo does not contain a valid theme CONTENT_ID")
     if sfo_values.get("CATEGORY") != "ac" or sfo_values.get("IRO_TAG") != "2":
@@ -97,7 +112,7 @@ def build_gp4_xml(
     for path in sorted(root_dir.rglob("*")):
         if path.is_symlink():
             raise Gp4Error(f"symlinks are not allowed in package staging: {path}")
-        if path.is_file():
+        if path.is_file() and path.name != "STAGING-MANIFEST.json":
             targets.append(_safe_target(path.relative_to(root_dir).as_posix()))
     if not targets:
         raise Gp4Error("staging tree contains no files")
@@ -124,7 +139,7 @@ def build_gp4_xml(
     _append_directories(root_node, _directory_tree(targets))
     ET.indent(project, space="  ")
     body = ET.tostring(project, encoding="unicode", short_empty_elements=True)
-    return '<?xml version="1.0" encoding="utf-8" standalone="yes"?>\n' + body + "\n"
+    return '\ufeff<?xml version="1.0" encoding="utf-8" standalone="yes"?>\n' + body + "\n"
 
 
 def validate_gp4_xml(
@@ -175,7 +190,7 @@ def validate_gp4_xml(
     expected_targets = sorted(
         _safe_target(path.relative_to(staging_dir).as_posix())
         for path in staging_dir.rglob("*")
-        if path.is_file() and not path.is_symlink()
+        if path.is_file() and not path.is_symlink() and path.name != "STAGING-MANIFEST.json"
     )
     if actual_targets != expected_targets:
         raise Gp4Error("GP4 file list does not exactly match the staging directory")
