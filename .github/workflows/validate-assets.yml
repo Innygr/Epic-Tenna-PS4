@@ -35,18 +35,8 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Generate original TV TIME home music
         run: python tools/generate_home_bgm.py --output "$RUNNER_TEMP/tv-time/sound/bgm_home.wav"
-      - name: Validate generated home music
-        run: |
-          python - "$RUNNER_TEMP/tv-time/sound/bgm_home.wav" <<'PY'
-          import wave, sys
-          path = sys.argv[1]
-          with wave.open(path, 'rb') as audio:
-              assert audio.getnchannels() == 2, audio.getparams()
-              assert audio.getsampwidth() == 2, audio.getparams()
-              assert audio.getframerate() == 48000, audio.getparams()
-              assert 31.9 <= audio.getnframes() / audio.getframerate() <= 32.1
-              print('PASS:', audio.getparams())
-          PY
+      - name: Analyze home music source master
+        run: python tools/analyze_home_bgm.py "$RUNNER_TEMP/tv-time/sound/bgm_home.wav" --output "$RUNNER_TEMP/tv-time/sound/bgm_home-analysis.json"
       - name: Validate images and manifest
         run: python tools/validate_staging.py --staging "$RUNNER_TEMP/tv-time/Image0"
       - name: Generate and validate package SFO XML input
@@ -76,6 +66,7 @@ jobs:
             ${{ runner.temp }}/tv-time/package-input/package-input-audit.json
             ${{ runner.temp }}/tv-time-dynamic/
             ${{ runner.temp }}/tv-time/sound/bgm_home.wav
+            ${{ runner.temp }}/tv-time/sound/bgm_home-analysis.json
             ${{ runner.temp }}/tv-time/package-input/param-ci-fixture.sfx
             ${{ runner.temp }}/tv-time/package-input/param-ci-fixture.sfo
             ${{ runner.temp }}/tv-time/tv-time-review-sheet.png
