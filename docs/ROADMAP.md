@@ -22,11 +22,12 @@
 - [x] Generate and validate the shared XDM plane model and align RAF XML with the reference scene structure
 - [x] Generate static theme.xml descriptor with red system colour and yellow focus accent
 - [x] Stage the `sce_sys/pic1.png` package image
+- [x] Generate and CI-validate the PS4 theme `param.sfx` XML metadata input
 - [ ] Confirm the dynamic scene on a compatible PS4 theme test environment
 
 ## Packaging
 - [ ] Complete home music ATRAC9 conversion and verify playback
-- [ ] Generate `sce_sys/param.sfo` using a verified, legitimate toolchain
+- [ ] Convert `param.sfx` into `sce_sys/param.sfo` using a verified, legitimate toolchain
 - [ ] Assemble and validate a theme `.pkg` using a verified, legitimate toolchain
 - [ ] Install and test the static TV TIME theme on a compatible console
 - [ ] Test the dynamic candidate separately
