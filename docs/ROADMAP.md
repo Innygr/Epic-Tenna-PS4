@@ -9,6 +9,7 @@
 
 ## Visual assets and review
 - [x] Create six icon artwork masters: Settings, Network, Friends, Messages, Media, Power
+- [x] Add CI checks for the six icon masters' SVG canvas, titles, and red/yellow palette
 - [x] Add reproducible SVG-to-PNG staging
 - [x] Add PNG/manifest validator
 - [x] Add labelled contact sheet generator
