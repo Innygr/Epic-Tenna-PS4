@@ -28,6 +28,17 @@ class AnalyzeHomeBgmTests(unittest.TestCase):
         self.assertLess(abs(report["left"]["dc_offset"]), 100)
         self.assertLess(abs(report["right"]["dc_offset"]), 100)
 
+    def test_rejects_empty_audio(self):
+        with tempfile.TemporaryDirectory() as temp:
+            source = Path(temp) / "empty.wav"
+            with wave.open(str(source), "wb") as wav:
+                wav.setnchannels(2)
+                wav.setsampwidth(2)
+                wav.setframerate(RATE)
+                wav.writeframes(b"")
+            with self.assertRaisesRegex(ValueError, "no audio frames"):
+                analyze(source)
+
     def test_rejects_mono_input(self):
         with tempfile.TemporaryDirectory() as temp:
             source = Path(temp) / "mono.wav"
