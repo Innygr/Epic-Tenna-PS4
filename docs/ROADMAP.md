@@ -18,13 +18,14 @@
 - [ ] Review illustrative home-screen overlay and adjust artwork if necessary
 - [ ] Confirm icon slots and export dimensions against selected supported format
 - [ ] Confirm wallpaper readability with actual console UI
-- [ ] Build and validate a separate original TV TIME dynamic-scene proof of concept (DDS frames and scene XML); keep static exports as fallback
+- [x] Build an experimental original TV TIME dynamic-scene candidate (12 DXT1 DDS frames + RAF XML); keep static exports as fallback
+- [ ] Generate and validate the shared plane model (BG.mdx) and confirm the scene on a compatible test environment
 
 ## Platform compatibility
 - [ ] Validate the documented theme format and package behaviour on a compatible test environment; firmware 14.02 compatibility is not yet confirmed
 - [x] Research static versus dynamic background options; retain static staging baseline and plan a separate dynamic-scene proof of concept
 - [x] Assess theme-level game-launch channel-switch support; no theme event interface is documented, so keep this separate from theme packaging
-- [ ] Document limitations without assuming community tools behave identically
+- [x] Document limitations without assuming community tools behave identically
 
 ## Acceptance criteria
 - Artwork is original, consistently branded, and visually legible.
