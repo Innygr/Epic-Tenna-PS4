@@ -20,6 +20,10 @@ BEAT = 60.0 / BPM
 DURATION = BARS * 4 * BEAT
 TAU = math.tau
 
+# Bar-positioned master gain creates a clear intro, main section, breakdown,
+# and finale while returning to the opening level at the loop boundary.
+ARRANGEMENT_GAINS = ((0, 0.78), (4, 1.00), (8, 0.74), (12, 1.04), (16, 0.78))
+
 # F major / D minor broadcast-game-show progression.
 CHORDS = [
     (174.61, 220.00, 261.63, 329.63),  # Fmaj7
@@ -42,6 +46,16 @@ def env(t: float, duration: float, attack: float = 0.012, release: float = 0.10)
 def osc(freq: float, t: float, bright: float = 0.0) -> float:
     phase = TAU * freq * t
     return math.sin(phase) * (1.0 - bright) + math.sin(phase * 2.0) * bright * 0.32
+
+
+def arrangement_gain(t: float) -> float:
+    """Interpolate the broadcast cue's broad four-section dynamic arc."""
+    bar_position = max(0.0, min(BARS, t / (4 * BEAT)))
+    for (bar_a, gain_a), (bar_b, gain_b) in zip(ARRANGEMENT_GAINS, ARRANGEMENT_GAINS[1:]):
+        if bar_position <= bar_b:
+            amount = (bar_position - bar_a) / (bar_b - bar_a)
+            return gain_a + (gain_b - gain_a) * amount
+    return ARRANGEMENT_GAINS[-1][1]
 
 
 def render(output: Path) -> None:
@@ -123,9 +137,12 @@ def render(output: Path) -> None:
             l += v * 0.96
             r += v
 
+        # Broad arrangement gain gives the loop an intro, main section,
+        # breakdown, and finale instead of holding one constant energy level.
+        master_gain = arrangement_gain(t)
         # Gentle stereo width and soft clipping.
-        l = math.tanh(l * 1.35) * 0.82
-        r = math.tanh(r * 1.35) * 0.82
+        l = math.tanh(l * master_gain * 1.35) * 0.82
+        r = math.tanh(r * master_gain * 1.35) * 0.82
         left.append(max(-32768, min(32767, round(l * 32767))))
         right.append(max(-32768, min(32767, round(r * 32767))))
 
