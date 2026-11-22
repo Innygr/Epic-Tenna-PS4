@@ -59,7 +59,7 @@ class PackageAuditTests(unittest.TestCase):
             "optional_audio": {
                 "included": bgm_loudness is not None,
                 "path": "sound/bgm_home.at9",
-                "bytes": 12 if bgm_loudness is not None else 0,
+                "bytes": (staging / "sound" / "bgm_home.at9").stat().st_size if bgm_loudness is not None else 0,
             },
             "package_metadata": {
                 "path": "sce_sys/param.sfo",
