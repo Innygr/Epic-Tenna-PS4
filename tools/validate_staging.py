@@ -10,6 +10,7 @@ from pathlib import Path, PurePosixPath
 from PIL import Image
 
 from build_theme_descriptor import validate_theme_xml
+from build_param_sfo import ParamSfoError, validate_param_sfo
 
 EXPECTED = {
     "texture/background/homescreen.png": (1920, 1080),
@@ -128,9 +129,36 @@ def main() -> int:
         if optional_audio.get("bytes") != size:
             raise SystemExit("FAIL: staged AT9 byte count does not match the manifest")
 
+    sfo_path = root / "sce_sys" / "param.sfo"
+    package_metadata = manifest.get("package_metadata", {})
+    sfo_included = bool(package_metadata.get("included"))
+    if sfo_included:
+        if package_metadata.get("path") != "sce_sys/param.sfo" or not sfo_path.is_file():
+            raise SystemExit("FAIL: manifest says param.sfo is included, but the file is missing")
+        if package_metadata.get("bytes") != sfo_path.stat().st_size:
+            raise SystemExit("FAIL: param.sfo byte count does not match the manifest")
+        if package_metadata.get("sha256") != digest(sfo_path):
+            raise SystemExit("FAIL: param.sfo SHA-256 does not match the manifest")
+        try:
+            sfo_values = validate_param_sfo(sfo_path.read_bytes())
+        except ParamSfoError as exc:
+            raise SystemExit(f"FAIL: staged param.sfo is invalid: {exc}") from exc
+        if sfo_values["TITLE_ID"] != package_metadata.get("title_id"):
+            raise SystemExit("FAIL: param.sfo TITLE_ID does not match the manifest")
+        if sfo_values["CONTENT_ID"] != package_metadata.get("content_id"):
+            raise SystemExit("FAIL: param.sfo CONTENT_ID does not match the manifest")
+        if "sce_sys/param.sfo" in manifest.get("not_generated", []):
+            raise SystemExit("FAIL: manifest both includes and omits param.sfo")
+    else:
+        if sfo_path.exists():
+            raise SystemExit("FAIL: param.sfo exists but manifest says it was not supplied")
+        if "sce_sys/param.sfo" not in manifest.get("not_generated", []):
+            raise SystemExit("FAIL: manifest must state that param.sfo was not supplied")
+
     print(f"PASS: {len(EXPECTED)} PNG assets and theme.xml validated; manifest hashes match.")
     print(f"PASS: red theme colour + yellow focus accent; home music {'enabled' if bgm_included else 'disabled'}")
-    print("NOTE: param.sfo, package creation, and real-console compatibility are still outstanding.")
+    print(f"PASS: binary param.sfo {'included and validated' if sfo_included else 'not supplied'}")
+    print("NOTE: package creation and real-console compatibility are still outstanding.")
     return 0
 
 
