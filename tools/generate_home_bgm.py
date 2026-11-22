@@ -22,7 +22,7 @@ TAU = math.tau
 
 # Bar-positioned master gain creates a clear intro, main section, breakdown,
 # and finale while returning to the opening level at the loop boundary.
-ARRANGEMENT_GAINS = ((0, 0.78), (4, 1.00), (8, 0.74), (12, 1.04), (16, 0.78))
+ARRANGEMENT_GAINS = ((0, 0.78), (3.75, 0.78), (4.25, 1.00), (7.75, 1.00), (8.25, 0.74), (11.75, 0.74), (12.25, 1.04), (15.75, 1.04), (16, 0.78))
 
 # F major / D minor broadcast-game-show progression.
 CHORDS = [
