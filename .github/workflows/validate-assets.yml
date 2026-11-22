@@ -59,6 +59,7 @@ jobs:
           name: tv-time-staging-assets
           path: |
             ${{ runner.temp }}/tv-time/Image0/
+            ${{ runner.temp }}/tv-time-dynamic/
             ${{ runner.temp }}/tv-time/sound/bgm_home.wav
             ${{ runner.temp }}/tv-time/tv-time-review-sheet.png
             ${{ runner.temp }}/tv-time/tv-time-home-ui-preview.png
