@@ -100,6 +100,28 @@ python tools/audit_package_inputs.py \
 
 The audit re-checks the theme palette, manifest hashes, SFO identity and theme category, optional AT9 state, and exact GP4-to-staging file inventory. It writes a JSON report containing a SHA-256 and byte count for each package input. It refuses the CI-only `CUSA00000` identity by default; `--allow-ci-fixture` exists only for explicit fixture validation, and the report labels that result as fixture-only. The audit report is stored outside `Image0` and is not added to the theme package. Passing this audit does not itself create a `.pkg` or prove console compatibility.
 
+## Home-music loudness metadata
+
+When a converted `sound/bgm_home.at9` is included, the theme SFO should also record the measured loudness in `PUBTOOLINFO` as `bgmhome_loud`. The value is measured from the actual AT9 file; do not guess or copy a value from another theme.
+
+With the separately supplied Publishing Tools folder (including `ext/libatrac9.dll`), run:
+
+```bash
+python tools/measure_home_bgm.py \
+  --at9 build/tv-time/audio/bgm_home.at9 \
+  --orbis-pub-cmd tools/orbis-pub-cmd.exe
+```
+
+The command reports a measured LKFS value, for example a value formatted to two decimals. Use the exact reported value when generating the XML SFO input:
+
+```bash
+python tools/build_param_sfx.py --title-id CUSA12345 --bgm-loudness -23.47
+python tools/build_param_sfo.py --input build/tv-time/package-input/param.sfx --output build/tv-time/package-input/param.sfo
+python tools/prepare_assets.py --output build/tv-time/production/Image0 --param-sfo build/tv-time/package-input/param.sfo --at9 build/tv-time/audio/bgm_home.at9
+```
+
+Replace the example loudness with the actual measured output. The package-input audit rejects a staged AT9 file if its SFO does not contain a measured `bgmhome_loud` value, and rejects that field when no AT9 file is staged. The measurement helper requires `ext/sc.exe`, `ext/di.exe`, and `ext/libatrac9.dll`; the PKG build itself still requires the compatible Publishing Tools command executable and support files.
+
 ## Build the theme .pkg
 
 The repository includes `tools/build_theme_pkg.py`, which wraps the theme-capable `img_create` and `img_file_list` commands. It uses the already-generated `pkg_ps4_theme` GP4 and the theme-specific SFO metadata (`CATEGORY=ac`, `IRO_TAG=2`). Do not substitute a generic app-package builder that rewrites the SFO as a game/application; a correctly formed theme package must retain the theme metadata.
