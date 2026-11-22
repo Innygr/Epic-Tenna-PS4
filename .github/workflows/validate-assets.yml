@@ -59,6 +59,8 @@ jobs:
         run: python tools/validate_staging.py --staging "$RUNNER_TEMP/tv-time/Image0-with-sfo/Image0"
       - name: Generate and validate theme GP4 project fixture
         run: python tools/build_gp4.py --staging "$RUNNER_TEMP/tv-time/Image0-with-sfo/Image0" --output "$RUNNER_TEMP/tv-time/package-input/tv-time-ci-fixture.gp4" --timestamp "2026-11-21 00:00:00"
+      - name: Audit CI fixture package inputs
+        run: python tools/audit_package_inputs.py --staging "$RUNNER_TEMP/tv-time/Image0-with-sfo/Image0" --gp4 "$RUNNER_TEMP/tv-time/package-input/tv-time-ci-fixture.gp4" --output "$RUNNER_TEMP/tv-time/package-input/package-input-audit.json" --allow-ci-fixture
       - name: Create visual review sheet
         run: python tools/make_review_sheet.py --staging "$RUNNER_TEMP/tv-time/Image0" --output "$RUNNER_TEMP/tv-time/tv-time-review-sheet.png"
       - name: Create illustrative home-screen UI overlay
@@ -71,6 +73,7 @@ jobs:
             ${{ runner.temp }}/tv-time/Image0/
             ${{ runner.temp }}/tv-time/Image0-with-sfo/
             ${{ runner.temp }}/tv-time/package-input/tv-time-ci-fixture.gp4
+            ${{ runner.temp }}/tv-time/package-input/package-input-audit.json
             ${{ runner.temp }}/tv-time-dynamic/
             ${{ runner.temp }}/tv-time/sound/bgm_home.wav
             ${{ runner.temp }}/tv-time/package-input/param-ci-fixture.sfx
