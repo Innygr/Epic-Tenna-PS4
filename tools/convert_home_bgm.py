@@ -81,11 +81,12 @@ def main() -> int:
         raise SystemExit(f"FAIL: at9tool exited with status {result.returncode}")
     if not args.output.is_file() or args.output.stat().st_size == 0:
         raise SystemExit("FAIL: encoder did not produce a non-empty AT9 file")
-    if args.output.stat().st_size > MAX_OUTPUT_BYTES:
+    output_size = args.output.stat().st_size
+    if output_size > MAX_OUTPUT_BYTES:
         args.output.unlink(missing_ok=True)
         raise SystemExit(
             f"FAIL: AT9 output exceeds the 2 MiB PS4 theme music limit "
-            f"({args.output.stat().st_size} bytes)"
+            f"({output_size} bytes)"
         )
 
     print(f"PASS: created {args.output} ({args.output.stat().st_size} bytes)")
