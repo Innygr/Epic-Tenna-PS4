@@ -51,6 +51,8 @@ jobs:
         run: python tools/validate_staging.py --staging "$RUNNER_TEMP/tv-time/Image0"
       - name: Generate and validate package SFO XML input
         run: python tools/build_param_sfx.py --title-id CUSA00000 --date 20261121 --output "$RUNNER_TEMP/tv-time/package-input/param-ci-fixture.sfx"
+      - name: Build binary param.sfo from CI fixture
+        run: python tools/build_param_sfo.py --input "$RUNNER_TEMP/tv-time/package-input/param-ci-fixture.sfx" --output "$RUNNER_TEMP/tv-time/package-input/param-ci-fixture.sfo"
       - name: Create visual review sheet
         run: python tools/make_review_sheet.py --staging "$RUNNER_TEMP/tv-time/Image0" --output "$RUNNER_TEMP/tv-time/tv-time-review-sheet.png"
       - name: Create illustrative home-screen UI overlay
@@ -64,6 +66,7 @@ jobs:
             ${{ runner.temp }}/tv-time-dynamic/
             ${{ runner.temp }}/tv-time/sound/bgm_home.wav
             ${{ runner.temp }}/tv-time/package-input/param-ci-fixture.sfx
+            ${{ runner.temp }}/tv-time/package-input/param-ci-fixture.sfo
             ${{ runner.temp }}/tv-time/tv-time-review-sheet.png
             ${{ runner.temp }}/tv-time/tv-time-home-ui-preview.png
           if-no-files-found: error
