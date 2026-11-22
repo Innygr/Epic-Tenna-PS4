@@ -13,8 +13,30 @@ Requires Python 3.10+ and only the Python standard library:
 python tools/generate_home_bgm.py --output build/tv-time/sound/bgm_home.wav
 ```
 
-The master is 32 seconds, stereo, 48 kHz, 16-bit PCM WAV, with symmetric 25 ms fades at the start and end. The edge samples meet at digital silence; this reduces a hard wrap click but is not a true overlapping crossfade, so the final loop still needs listening tests after ATRAC9 conversion. GitHub Actions generates it and validates its channel count, sample
-width, sample rate, duration, and non-duplicated stereo content with balanced channel levels.
+The master is 32 seconds, stereo, 48 kHz, 16-bit PCM WAV, with symmetric 25 ms
+fades at the start and end. The edge samples meet at digital silence; this
+reduces a hard wrap click but is not a true overlapping crossfade, so the final
+loop still needs listening tests after ATRAC9 conversion.
+
+## Analyze the source master
+
+Run the standard-library analyzer after generating the WAV:
+
+```bash
+python tools/analyze_home_bgm.py build/tv-time/sound/bgm_home.wav \
+  --output build/tv-time/sound/bgm_home-analysis.json
+```
+
+The report records per-channel peak and RMS levels, DC offset, clipping count,
+stereo correlation, mean absolute channel difference, and left/right RMS
+balance. It fails on an unexpected format, duration, silence, full-scale
+clipping, effectively duplicated channels, or substantially unbalanced channel
+levels. GitHub Actions runs this analyzer and uploads its JSON report with the
+review assets.
+
+These are measurable source-master checks, not a subjective mix review. They
+cannot establish whether the cue sounds good on headphones or TV speakers, and
+they do not replace listening to the final ATRAC9 encode.
 
 ## Convert to the PS4 theme format
 
