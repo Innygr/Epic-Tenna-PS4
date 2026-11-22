@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import sys
 import wave
 from array import array
 from pathlib import Path
@@ -31,6 +32,8 @@ def analyze(path: Path) -> dict[str, Any]:
         width = wav.getsampwidth()
         rate = wav.getframerate()
         frames = wav.getnframes()
+        if rate <= 0:
+            raise ValueError("WAV sample rate must be greater than zero")
         if channels != 2 or width != 2:
             raise ValueError(f"expected stereo 16-bit PCM, got {channels} channels / {width * 8}-bit")
         raw = wav.readframes(frames)
@@ -39,6 +42,8 @@ def analyze(path: Path) -> dict[str, Any]:
 
     samples = array("h")
     samples.frombytes(raw)
+    if sys.byteorder != "little":
+        samples.byteswap()
     left = samples[0::2]
     right = samples[1::2]
     if not left:
