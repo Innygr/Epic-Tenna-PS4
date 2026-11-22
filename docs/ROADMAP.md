@@ -14,6 +14,7 @@
 - [x] Add labelled contact sheet generator
 - [x] Add illustrative home-screen UI overlay preview
 - [x] Add GitHub Actions render, validation, and review-artifact workflow
+- [x] Generate a red/yellow stereo waveform overview for the original home-music master
 - [x] Inspect initial staging images and contact sheet
 - [x] Review illustrative home-screen overlay and improve shelf readability over the Tenna foreground
 - [ ] Confirm icon slots and export dimensions against selected supported format
