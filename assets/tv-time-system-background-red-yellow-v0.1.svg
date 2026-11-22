@@ -39,4 +39,12 @@
   <g fill="#fff1a8" opacity=".16">
     <circle cx="230" cy="250" r="3"/><circle cx="510" cy="190" r="2"/><circle cx="1540" cy="245" r="3"/><circle cx="1770" cy="170" r="2"/>
   </g>
+  <!-- Quiet broadcast corner marks; kept away from the central icon field. -->
+  <g opacity=".52" fill="none" stroke="#ffe36a" stroke-width="3">
+    <path d="M92 92h42M92 92v42M1828 92h-42M1828 92v42M92 988h42M92 988v-42M1828 988h-42M1828 988v-42"/>
+  </g>
+  <g font-family="DejaVu Sans, sans-serif" font-weight="700" letter-spacing="5">
+    <text x="154" y="112" font-size="22" fill="#fff1a8" opacity=".66">TV TIME  /  SYSTEM MENU</text>
+    <text x="1766" y="978" text-anchor="end" font-size="18" fill="#ffe36a" opacity=".58">BROADCAST 04</text>
+  </g>
 </svg>
