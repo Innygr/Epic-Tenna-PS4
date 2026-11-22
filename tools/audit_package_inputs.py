@@ -123,6 +123,12 @@ def build_package_audit(
         raise PackageAuditError("staged AT9 presence differs from optional_audio manifest metadata")
     if bool(theme.get("homebgm_enabled")) != audio_included:
         raise PackageAuditError("homebgm-enable does not match staged AT9 presence")
+    pubtoolinfo = sfo_values.get("PUBTOOLINFO", "")
+    has_loudness = ",bgmhome_loud=" in pubtoolinfo
+    if audio_included != has_loudness:
+        raise PackageAuditError(
+            "staged AT9 presence must match the measured bgmhome_loud value in param.sfo"
+        )
     if audio_included:
         audio_bytes = audio_path.stat().st_size
         if not 0 < audio_bytes <= 2 * 1024 * 1024:
