@@ -16,6 +16,7 @@ import cairosvg
 from PIL import Image, ImageFilter
 
 from build_theme_descriptor import build_theme_xml
+from build_param_sfo import ParamSfoError, validate_param_sfo
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT_DEFAULT = ROOT / "build" / "tv-time" / "Image0"
@@ -57,6 +58,11 @@ def main() -> int:
         type=Path,
         help="optional already-converted bgm_home.at9; enables the theme's home music slot",
     )
+    parser.add_argument(
+        "--param-sfo",
+        type=Path,
+        help="optional validated binary param.sfo; copied to sce_sys/param.sfo",
+    )
     args = parser.parse_args()
     out = args.output.resolve()
     if args.at9:
@@ -66,6 +72,16 @@ def main() -> int:
             parser.error("--at9 must point to an .at9 file, not a WAV source")
         if not 0 < args.at9.stat().st_size <= MAX_AT9_BYTES:
             parser.error("AT9 input must be non-empty and no larger than 2 MiB")
+    param_sfo_values = None
+    if args.param_sfo:
+        if not args.param_sfo.is_file():
+            parser.error(f"param.sfo input does not exist: {args.param_sfo}")
+        if args.param_sfo.suffix.lower() != ".sfo":
+            parser.error("--param-sfo must point to a binary .sfo file")
+        try:
+            param_sfo_values = validate_param_sfo(args.param_sfo.read_bytes())
+        except ParamSfoError as exc:
+            parser.error(f"invalid param.sfo input: {exc}")
 
     if out.exists():
         if not args.force:
@@ -98,6 +114,12 @@ def main() -> int:
         bgm_target = out / "sound" / "bgm_home.at9"
         bgm_target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(args.at9, bgm_target)
+
+    has_param_sfo = bool(args.param_sfo)
+    if args.param_sfo:
+        sfo_target = out / "sce_sys" / "param.sfo"
+        sfo_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(args.param_sfo, sfo_target)
 
     theme_xml = build_theme_xml(label="TV-TIME", themecolor=2, homebgm_enabled=has_bgm)
     theme_path = out / "theme.xml"
@@ -136,8 +158,16 @@ def main() -> int:
             "included": has_bgm,
             "bytes": (out / "sound" / "bgm_home.at9").stat().st_size if has_bgm else 0,
         },
+        "package_metadata": {
+            "path": "sce_sys/param.sfo",
+            "included": has_param_sfo,
+            "bytes": (out / "sce_sys" / "param.sfo").stat().st_size if has_param_sfo else 0,
+            "sha256": sha256(out / "sce_sys" / "param.sfo") if has_param_sfo else None,
+            "title_id": param_sfo_values["TITLE_ID"] if param_sfo_values else None,
+            "content_id": param_sfo_values["CONTENT_ID"] if param_sfo_values else None,
+        },
         "not_generated": [
-            "sce_sys/param.sfo",
+            *([] if has_param_sfo else ["sce_sys/param.sfo"]),
             "scene/background.raf",
             "installable .pkg",
         ],
@@ -151,7 +181,8 @@ def main() -> int:
     (out / "STAGING-MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(f"Prepared {len(files)} PNG assets and theme.xml in {out}")
     print(f"Home music slot: {'enabled' if has_bgm else 'disabled (no staged AT9)'}")
-    print("This is a theme staging tree only; no param.sfo or .pkg was created.")
+    print(f"Binary param.sfo: {'staged' if has_param_sfo else 'not supplied'}")
+    print("This is a theme staging tree only; no .pkg was created.")
     return 0
 
 
