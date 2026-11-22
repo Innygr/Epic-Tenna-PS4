@@ -129,13 +129,17 @@ def render(output: Path) -> None:
         left.append(max(-32768, min(32767, round(l * 32767))))
         right.append(max(-32768, min(32767, round(r * 32767))))
 
-    # 25 ms equal-power-ish crossfade makes the musical loop seam unobtrusive.
+    # Short symmetric edge fades keep the file's loop boundary near digital
+    # silence without a hard click. Both ends taper so the final and first
+    # samples meet at zero on every playback wrap.
     fade = round(0.025 * RATE)
     for i in range(fade):
-        p = i / fade
+        gain = i / (fade - 1)
         tail = total - fade + i
-        left[tail] = round(left[tail] * (1.0 - p) + left[i] * p)
-        right[tail] = round(right[tail] * (1.0 - p) + right[i] * p)
+        left[i] = round(left[i] * gain)
+        right[i] = round(right[i] * gain)
+        left[tail] = round(left[tail] * (1.0 - gain))
+        right[tail] = round(right[tail] * (1.0 - gain))
 
     output.parent.mkdir(parents=True, exist_ok=True)
     interleaved = array("h")
