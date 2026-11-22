@@ -92,9 +92,9 @@ The generator checks the theme descriptor, SFO theme identifiers, SFO hash/size 
 After generating an `Image0` tree with a real, non-conflicting title ID and building its GP4 description, run:
 
 ```bash
-python tools/audit_package_inputs.py \\
-  --staging build/tv-time/production/Image0 \\
-  --gp4 build/tv-time/package-input/tv-time.gp4 \\
+python tools/audit_package_inputs.py \
+  --staging build/tv-time/production/Image0 \
+  --gp4 build/tv-time/package-input/tv-time.gp4 \
   --output build/tv-time/package-input/package-input-audit.json
 ```
 
@@ -107,16 +107,16 @@ The repository includes `tools/build_theme_pkg.py`, which wraps the theme-capabl
 The external tool is not included in this repository. Supply a compatible `orbis-pub-cmd` executable with its adjacent `ext/` directory. On Windows, the default location is `tools/orbis-pub-cmd.exe`. On Linux, use the Windows executable through Wine:
 
 ```bash
-python tools/build_theme_pkg.py \\
-  --staging build/tv-time/production/Image0 \\
-  --gp4 build/tv-time/package-input/tv-time.gp4 \\
+python tools/build_theme_pkg.py \
+  --staging build/tv-time/production/Image0 \
+  --gp4 build/tv-time/package-input/tv-time.gp4 \
   --output build/tv-time/package-output/TV-TIME.pkg
 
 # Linux with a separately installed Wine and a compatible Windows toolchain:
-python tools/build_theme_pkg.py \\
-  --staging build/tv-time/production/Image0 \\
-  --gp4 build/tv-time/package-input/tv-time.gp4 \\
-  --output build/tv-time/package-output/TV-TIME.pkg \\
+python tools/build_theme_pkg.py \
+  --staging build/tv-time/production/Image0 \
+  --gp4 build/tv-time/package-input/tv-time.gp4 \
+  --output build/tv-time/package-output/TV-TIME.pkg \
   --orbis-pub-cmd /path/to/orbis-pub-cmd.exe --wine
 ```
 
