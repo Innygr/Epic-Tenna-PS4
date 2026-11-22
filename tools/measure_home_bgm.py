@@ -10,6 +10,7 @@ import argparse
 import json
 import math
 import re
+import subprocess
 from pathlib import Path
 from typing import Any, Callable
 
@@ -41,7 +42,7 @@ def measure_loudness(
         )
 
     output = _run_tool(
-        runner or __import__("subprocess").run,
+        runner or subprocess.run,
         prefix + ["file_calc_loudness", str(at9)],
         cwd=at9.parent,
         timeout=120,
