@@ -34,6 +34,13 @@ clipping, effectively duplicated channels, or substantially unbalanced channel
 levels. GitHub Actions runs this analyzer and uploads its JSON report with the
 review assets.
 
+The workflow also creates a stereo amplitude-envelope PNG alongside the JSON
+report. It uses separate red and yellow channel traces on a dark broadcast-style
+canvas, with a four-second timeline. This makes the overall arrangement,
+channel activity, and fade edges easier to inspect at a glance. It is an
+amplitude overview, not a spectrogram, loudness meter, or substitute for
+listening.
+
 These are measurable source-master checks, not a subjective mix review. They
 cannot establish whether the cue sounds good on headphones or TV speakers, and
 they do not replace listening to the final ATRAC9 encode.
