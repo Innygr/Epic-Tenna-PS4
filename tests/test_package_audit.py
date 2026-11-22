@@ -78,7 +78,7 @@ class PackageAuditTests(unittest.TestCase):
             self.assertEqual(report["gp4"]["file_count"], 4)
             self.assertEqual(
                 [item["path"] for item in report["package_files"]],
-                ["sce_sys/icon0.png", "sce_sys/param.sfo", "texture/background/homescreen.png", "theme.xml"],
+                ["sce_sys/icon0.png", "sce_sys/param.sfo", "theme.xml", "texture/background/homescreen.png"],
             )
             self.assertTrue(all(len(item["sha256"]) == 64 for item in report["package_files"]))
 
