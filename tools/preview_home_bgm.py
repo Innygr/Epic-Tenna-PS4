@@ -63,6 +63,7 @@ def render(wav_path: Path, output: Path) -> None:
     panel_h, gap = 230, 36
     top = 160
     columns = plot_w
+    section_labels = ("INTRO", "MAIN", "BREAKDOWN", "FINALE")
 
     for channel_index, (label, values, accent) in enumerate(
         (("LEFT CHANNEL", left, RED), ("RIGHT CHANNEL", right, YELLOW))
@@ -70,6 +71,16 @@ def render(wav_path: Path, output: Path) -> None:
         y0 = top + channel_index * (panel_h + gap)
         draw.rounded_rectangle((64, y0, WIDTH - 64, y0 + panel_h), radius=18, fill=PANEL)
         draw.text((plot_x, y0 + 16), label, font=font(16), fill=TEXT)
+        duration = len(values) / rate
+        # Mark the four 8-second arrangement sections on both channel panels.
+        for section, section_label in enumerate(section_labels):
+            section_start = section * duration / 4
+            section_end = (section + 1) * duration / 4
+            x_start = plot_x + round(section_start / duration * plot_w)
+            x_end = plot_x + round(section_end / duration * plot_w)
+            draw.text((x_start + 8, y0 + 43), section_label, font=font(11), fill=MUTED)
+            if section:
+                draw.line((x_start, y0 + 58, x_start, y0 + 202), fill=GRID, width=2)
         center = y0 + 130
         amplitude = 78
         draw.line((plot_x, center, plot_x + plot_w, center), fill=GRID, width=1)
@@ -88,7 +99,6 @@ def render(wav_path: Path, output: Path) -> None:
             y_low = center - int(low / 32768 * amplitude)
             draw.line((plot_x + x, y_high, plot_x + x, y_low), fill=accent, width=1)
 
-        duration = len(values) / rate
         for tick in range(0, int(math.ceil(duration)) + 1, 4):
             x = plot_x + round(tick / duration * plot_w)
             if x <= plot_x + plot_w:
