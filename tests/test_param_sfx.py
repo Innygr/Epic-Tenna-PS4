@@ -45,7 +45,7 @@ class ParamSfxTests(unittest.TestCase):
                     self.build(bgm_loudness=value)
 
     def test_malformed_home_music_loudness_is_rejected(self):
-        xml_text = self.build(bgm_loudness=-23.47).replace("bgmhome_loud=-23.47", "bgmhome_loud=very-loud")
+        xml_text = self.build().replace("c_date=20261121", "c_date=20261121,bgmhome_loud=very-loud")
         with self.assertRaises(ParamSfxError):
             validate_param_sfx(xml_text)
 
