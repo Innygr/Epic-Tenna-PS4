@@ -72,7 +72,7 @@ def dds_file(image: Image.Image) -> bytes:
     # DDS_HEADER (124 bytes), legacy DXT1 FourCC, no mipmaps.
     flags = 0x1 | 0x2 | 0x4 | 0x1000 | 0x80000
     header = b"DDS " + struct.pack(
-        "<7I44xII4s5I",
+        "<7I44xII4s5I5I",
         124, flags, height, width, len(payload), 0, 0,
         32, 0x4, b"DXT1", 0x1000, 0, 0, 0, 0
     )
