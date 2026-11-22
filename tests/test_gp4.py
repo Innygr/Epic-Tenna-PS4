@@ -1,3 +1,4 @@
+import hashlib
 import json
 import sys
 import tempfile
@@ -30,12 +31,24 @@ class Gp4Tests(unittest.TestCase):
             content_prefix="UP9000", edition="TVTIME0000000000",
             date_text="20261121",
         )
-        (staging / "sce_sys" / "param.sfo").write_bytes(build_param_sfo_bytes(sfx))
+        sfo_binary = build_param_sfo_bytes(sfx)
+        (staging / "sce_sys" / "param.sfo").write_bytes(sfo_binary)
         (staging / "sce_sys" / "icon0.png").write_bytes(b"png-fixture")
         (staging / "sce_sys" / "pic1.png").write_bytes(b"png-fixture")
         (staging / "texture" / "background" / "homescreen.png").write_bytes(b"png-fixture")
         (staging / "STAGING-MANIFEST.json").write_text(
-            json.dumps({"status": "theme-staging-only; not an installable package"}),
+            json.dumps({
+                "status": "theme-staging-only; not an installable package",
+                "package_metadata": {
+                    "path": "sce_sys/param.sfo",
+                    "included": True,
+                    "bytes": len(sfo_binary),
+                    "sha256": hashlib.sha256(sfo_binary).hexdigest(),
+                    "title_id": "CUSA12345",
+                    "content_id": "UP9000-CUSA12345_00-TVTIME0000000000",
+                },
+                "not_generated": ["installable .pkg"],
+            }),
             encoding="utf-8",
         )
         return staging
@@ -53,7 +66,7 @@ class Gp4Tests(unittest.TestCase):
                 staging_dir=staging,
                 expected_content_id="UP9000-CUSA12345_00-TVTIME0000000000",
             )
-            self.assertEqual(result["file_count"], 6)
+            self.assertEqual(result["file_count"], 5)
             self.assertEqual(result["content_id"], "UP9000-CUSA12345_00-TVTIME0000000000")
             self.assertIn("sce_sys/param.sfo", result["targets"])
             self.assertIn("texture/background/homescreen.png", result["targets"])
@@ -84,7 +97,7 @@ class Gp4Tests(unittest.TestCase):
             staging = self.make_staging(Path(temp))
             xml_text = build_gp4_xml(staging, timestamp="2026-11-21 12:30:00")
             self.assertIn("orig_path=", xml_text)
-            self.assertTrue(xml_text.startswith('<?xml version="1.0"'))
+            self.assertTrue(xml_text.startswith('\ufeff<?xml version="1.0"'))
 
     def test_timestamp_format_is_enforced(self):
         with tempfile.TemporaryDirectory() as temp:
