@@ -62,6 +62,7 @@ def build_param_sfx(
     content_prefix: str = "UP9000",
     edition: str = "TVTIME0000000000",
     date_text: str | None = None,
+    bgm_loudness: float | None = None,
 ) -> str:
     """Return validated param.sfx XML for a PS4 theme package."""
     date_text = date_text or dt.date.today().strftime("%Y%m%d")
@@ -72,7 +73,15 @@ def build_param_sfx(
         edition=edition,
         date_text=date_text,
     )
+    if bgm_loudness is not None:
+        if not isinstance(bgm_loudness, (int, float)) or not (-100.0 <= bgm_loudness <= 0.0):
+            raise ParamSfxError("bgm-loudness must be a measured LKFS value between -100 and 0")
+        if not __import__("math").isfinite(float(bgm_loudness)):
+            raise ParamSfxError("bgm-loudness must be a finite measured LKFS value")
     clean_title = title.strip()
+    pubtoolinfo = f"c_date={date_text}"
+    if bgm_loudness is not None:
+        pubtoolinfo += f",bgmhome_loud={float(bgm_loudness):.2f}"
     values = [
         ("ATTRIBUTE", "int32", None, "0"),
         ("CATEGORY", "utf8", "4", "ac"),
@@ -80,7 +89,7 @@ def build_param_sfx(
         ("CONTENT_VER", "utf8", "8", "01.00"),
         ("FORMAT", "utf8", "4", "obs"),
         ("IRO_TAG", "int32", None, "2"),
-        ("PUBTOOLINFO", "utf8", "512", f"c_date={date_text}"),
+        ("PUBTOOLINFO", "utf8", "512", pubtoolinfo),
         ("TITLE", "utf8", "128", clean_title),
         ("TITLE_ID", "utf8", "12", title_id),
         ("VERSION", "utf8", "8", "01.00"),
@@ -161,10 +170,14 @@ def validate_param_sfx(
         raise ParamSfxError("TITLE must be a non-empty UTF-8 value")
     if len(params["TITLE"][1].encode("utf-8")) > 128:
         raise ParamSfxError("TITLE exceeds the 128-byte UTF-8 limit")
+    pubtoolinfo = params["PUBTOOLINFO"][1]
     if params["PUBTOOLINFO"][0] != "utf8" or not re.fullmatch(
-        r"c_date=[0-9]{8}", params["PUBTOOLINFO"][1]
+        r"c_date=[0-9]{8}(?:,bgmhome_loud=-?(?:[0-9]{1,3})\\.[0-9]{2})?",
+        pubtoolinfo,
     ):
-        raise ParamSfxError("PUBTOOLINFO must contain c_date=YYYYMMDD")
+        raise ParamSfxError(
+            "PUBTOOLINFO must contain c_date=YYYYMMDD and optional measured bgmhome_loud=LKFS"
+        )
     return {key: value for key, (_fmt, value) in params.items()}
 
 
@@ -179,6 +192,11 @@ def main() -> int:
     parser.add_argument("--content-prefix", default="UP9000")
     parser.add_argument("--edition", default="TVTIME0000000000", help="16-character uppercase edition code")
     parser.add_argument("--date", help="reproducible SFO build date in YYYYMMDD form")
+    parser.add_argument(
+        "--bgm-loudness",
+        type=float,
+        help="measured home-music loudness in LKFS from file_calc_loudness; only use with a staged AT9 track",
+    )
     parser.add_argument("--output", type=Path, default=OUTPUT_DEFAULT)
     parser.add_argument("--force", action="store_true", help="replace an existing output file")
     args = parser.parse_args()
@@ -189,6 +207,7 @@ def main() -> int:
         content_prefix=args.content_prefix,
         edition=args.edition,
         date_text=args.date,
+        bgm_loudness=args.bgm_loudness,
     )
     if args.output.exists() and not args.force:
         parser.error(f"{args.output} already exists; choose another --output or pass --force")
