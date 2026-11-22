@@ -43,7 +43,7 @@ def main() -> int:
     draw.text((1480, 67), "14:02     ◉  ONLINE", font=small_font, fill=(255, 212, 0, 240))
 
     # A subtle translucent shelf mimics the visual weight of the home-screen row.
-    draw.rounded_rectangle((70, 645, 1850, 940), radius=28, fill=(8, 5, 8, 218),
+    draw.rounded_rectangle((70, 645, 970, 940), radius=28, fill=(8, 5, 8, 218),
                            outline=(255, 212, 0, 95), width=2)
 
     apps = [
@@ -53,21 +53,21 @@ def main() -> int:
         ("S", "SETTINGS", (45, 32, 34, 235)),
         ("N", "NETWORK", (45, 32, 34, 235)),
     ]
-    start_x, y, size, gap = 120, 685, 164, 28
+    start_x, y, size, gap = 110, 685, 140, 24
     for index, (glyph, label, colour) in enumerate(apps):
         x = start_x + index * (size + gap)
         selected = index == 0
         border = (255, 212, 0, 255) if selected else (255, 246, 222, 95)
         draw.rounded_rectangle((x, y, x + size, y + size), radius=22,
                                fill=colour, outline=border, width=5 if selected else 2)
-        draw.text((x + size // 2, y + 38), glyph, font=font(54),
+        draw.text((x + size // 2, y + 38), glyph, font=font(48),
                   fill=(255, 246, 222, 255), anchor="mm")
-        draw.text((x + size // 2, y + 113), label, font=small_font,
+        draw.text((x + size // 2, y + 101), label, font=small_font,
                   fill=(255, 246, 222, 255), anchor="mm")
         if selected:
             draw.rounded_rectangle((x - 9, y - 9, x + size + 9, y + size + 9),
                                    radius=28, outline=(255, 212, 0, 210), width=3)
-    draw.text((125, 895), "Illustrative overlay only — not an exact PS4 UI capture",
+    draw.text((110, 895), "Illustrative overlay only — not an exact PS4 UI capture",
               font=label_font, fill=(255, 246, 222, 190))
 
     # Footer is deliberately understated to keep attention on UI contrast.
