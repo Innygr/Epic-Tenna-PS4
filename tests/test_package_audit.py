@@ -29,6 +29,11 @@ class PackageAuditTests(unittest.TestCase):
             '<functionscreen-dimmer>#00FFFFFF</functionscreen-dimmer>'
             '<titlename-dimmer>#00FFFFFF</titlename-dimmer><homebgm-enable>False</homebgm-enable></theme>'
         )
+        if bgm_loudness is not None:
+            theme_xml = theme_xml.replace(
+                "<homebgm-enable>False</homebgm-enable>",
+                "<homebgm-enable>True</homebgm-enable>",
+            )
         theme_path = staging / "theme.xml"
         theme_path.write_text(theme_xml, encoding="utf-8")
         sfx = build_param_sfx(
