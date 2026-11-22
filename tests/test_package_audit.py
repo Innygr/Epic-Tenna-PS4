@@ -125,15 +125,21 @@ class PackageAuditTests(unittest.TestCase):
 
     def test_staged_music_without_loudness_metadata_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp:
-            staging, gp4 = self.make_inputs(Path(temp))
-            audio = staging / "sound" / "bgm_home.at9"
-            audio.parent.mkdir(parents=True)
-            audio.write_bytes(b"fixture-at9")
+            staging, gp4 = self.make_inputs(Path(temp), bgm_loudness=-23.47)
+            sfx_without_loudness = build_param_sfx(
+                title="TV TIME",
+                title_id="CUSA12345",
+                content_prefix="UP9000",
+                edition="TVTIME0000000000",
+                date_text="20261121",
+            )
+            sfo_bytes = build_param_sfo_bytes(sfx_without_loudness)
+            sfo_path = staging / "sce_sys" / "param.sfo"
+            sfo_path.write_bytes(sfo_bytes)
             manifest_path = staging / "STAGING-MANIFEST.json"
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            manifest["optional_audio"] = {
-                "included": True, "path": "sound/bgm_home.at9", "bytes": audio.stat().st_size
-            }
+            manifest["package_metadata"]["bytes"] = len(sfo_bytes)
+            manifest["package_metadata"]["sha256"] = hashlib.sha256(sfo_bytes).hexdigest()
             manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
             with self.assertRaisesRegex(PackageAuditError, "bgmhome_loud"):
                 build_package_audit(staging, gp4)
