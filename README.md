@@ -15,12 +15,12 @@ A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHE
 
 ## Packaging preparation
 - [Packaging readiness and staging instructions](docs/PACKAGING-READINESS.md)
-- [Asset preparation](tools/prepare_assets.py) · [Theme descriptor generator](tools/build_theme_descriptor.py) · [SFO metadata input generator](tools/build_param_sfx.py) · [Binary SFO writer](tools/build_param_sfo.py) · [GP4 project generator](tools/build_gp4.py) · [Package input audit](tools/audit_package_inputs.py) · [Theme PKG maker](tools/build_theme_pkg.py) · [Validator](tools/validate_staging.py)
+- [Asset preparation](tools/prepare_assets.py) · [Theme descriptor generator](tools/build_theme_descriptor.py) · [SFO metadata input generator](tools/build_param_sfx.py) · [Binary SFO writer](tools/build_param_sfo.py) · [GP4 project generator](tools/build_gp4.py) · [Package input audit](tools/audit_package_inputs.py) · [Theme PKG maker](tools/build_theme_pkg.py) · [Home-music loudness measurement](tools/measure_home_bgm.py) · [Validator](tools/validate_staging.py)
 - [Dynamic-scene proof of concept](docs/DYNAMIC-SCENE-POC.md)
 - Install dependencies: `python -m pip install -r requirements-packaging.txt`.
 - Generate the static theme tree: `python tools/prepare_assets.py`.
 - Validate the static theme tree: `python tools/validate_staging.py`.
-- Generate the package metadata input (using your chosen title ID): `python tools/build_param_sfx.py --title-id CUSA12345`.
+- If home music is included, measure the converted AT9 file first: `python tools/measure_home_bgm.py --at9 build/tv-time/audio/bgm_home.at9 --orbis-pub-cmd tools/orbis-pub-cmd.exe`; pass its reported value to `build_param_sfx.py --bgm-loudness VALUE`. Generate the package metadata input (using your chosen title ID): `python tools/build_param_sfx.py --title-id CUSA12345`.
 - Convert that XML input to a binary SFO: `python tools/build_param_sfo.py --input build/tv-time/package-input/param.sfx --output build/tv-time/package-input/param.sfo`.
 - Stage it in an `Image0` folder: `python tools/prepare_assets.py --output build/tv-time/production/Image0 --param-sfo build/tv-time/package-input/param.sfo`.
 - Validate the staging tree: `python tools/validate_staging.py --staging build/tv-time/production/Image0`.
