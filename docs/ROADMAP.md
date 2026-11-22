@@ -18,8 +18,9 @@
 - [ ] Review illustrative home-screen overlay and adjust artwork if necessary
 - [ ] Confirm icon slots and export dimensions against selected supported format
 - [ ] Confirm wallpaper readability with actual console UI
-- [x] Build an experimental original TV TIME dynamic-scene candidate (12 DXT1 DDS frames + RAF XML); keep static exports as fallback
-- [ ] Generate and validate the shared plane model (BG.mdx) and confirm the scene on a compatible test environment
+- [x] Build an experimental original TV TIME dynamic-scene candidate (12 DXT1 DDS frames + RAF XML)
+- [x] Generate and validate the shared XDM plane model and align RAF XML with the reference scene structure
+- [ ] Confirm the dynamic scene on a compatible PS4 theme test environment
 
 ## Platform compatibility
 - [ ] Validate the documented theme format and package behaviour on a compatible test environment; firmware 14.02 compatibility is not yet confirmed
