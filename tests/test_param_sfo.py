@@ -95,7 +95,7 @@ class ParamSfoTests(unittest.TestCase):
     def test_source_xml_value_mismatch_is_rejected(self):
         xml_text = self.make_xml()
         binary = build_param_sfo_bytes(xml_text)
-        changed = xml_text.replace("<IRO_TAG>2</param>", "<IRO_TAG>1</param>")
+        changed = xml_text.replace('key="IRO_TAG" fmt="int32">2', 'key="IRO_TAG" fmt="int32">1')
         with self.assertRaises(ParamSfoError):
             validate_param_sfo(binary, expected_xml=changed)
 
