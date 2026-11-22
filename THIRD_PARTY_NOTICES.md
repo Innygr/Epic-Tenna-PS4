@@ -2,10 +2,11 @@
 
 ## PS4 Ultimate Theme Creator
 
-The dynamic-scene model and RAF layout work in this repository was implemented
-after inspecting the format handling and working-theme conventions documented
-by [PS4 Ultimate Theme Creator](https://github.com/Imxnxl/PS4-Ultimate-Theme-Creator).
-No source files from that project are copied into this repository.
+The dynamic-scene model, RAF layout, and theme GP4 project structure in this
+repository were implemented after inspecting the format handling and
+working-theme conventions documented by [PS4 Ultimate Theme
+Creator](https://github.com/Imxnxl/PS4-Ultimate-Theme-Creator). No source files
+from that project are copied into this repository.
 
 The reference project is distributed under the MIT License. Its copyright and
 license notice are reproduced here for attribution:
