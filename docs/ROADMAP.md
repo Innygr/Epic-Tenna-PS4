@@ -25,6 +25,7 @@
 - [x] Generate and CI-validate the PS4 theme `param.sfx` XML metadata input
 - [x] Add binary PSF 1.1 writer and round-trip validator for `param.sfo`
 - [x] Add optional `--param-sfo` staging and CI validation in a separate fixture tree
+- [x] Generate and CI-validate a theme-mode GP4 project description
 - [ ] Confirm the dynamic scene on a compatible PS4 theme test environment
 
 ## Packaging
