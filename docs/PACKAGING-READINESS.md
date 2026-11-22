@@ -1,24 +1,31 @@
 # TV TIME packaging readiness
 
 ## Scope
-This repository prepares and reviews original visual assets for a PS4 theme concept. The pipeline creates a staging tree, validates PNGs and the manifest, produces a labelled contact sheet, and creates an illustrative home-screen overlay preview. It does not create, sign, or install a PS4 package.
 
-A future packaging decision must use a verified, legitimate toolchain and compatibility information. A staging folder or ZIP is not an installable theme.
+The repository now produces a **static PS4 theme staging tree** with a `theme.xml` descriptor and a separate **experimental dynamic-scene candidate**. The static tree preserves the Tenna home wallpaper and the red/yellow function-screen background. CI validates the generated PNGs, descriptor, manifest, dynamic scene, and original WAV music master.
 
-## Staging layout
+It does not generate `sce_sys/param.sfo`, create or sign a `.pkg`, or prove compatibility with the target console. A staging folder or ZIP is not an installable theme.
+
+## Default static staging layout
+
 `build/tv-time/Image0/` contains:
-- `texture/background/homescreen.png` — Tenna-inspired wallpaper
-- `texture/background/functionscreen.png` — red/yellow static background
-- `texture/preview.png` — theme preview
-- `texture/function_icon/` — four mapped icons and glow variants
-- `sce_sys/icon0.png` — theme-list icon
-- `STAGING-MANIFEST.json` — dimensions, modes, byte sizes, SHA-256
 
-The export dimensions are a provisional builder profile, not a universal guarantee. Confirm exact paths, dimensions, colour modes, preview dimensions, and limits against the selected supported format before treating these as final exports.
+- `theme.xml` — format-version 4.0 descriptor; red system theme colour (`themecolor=2`), yellow focus accent (`#FFFFD400`), warm-white text, transparent dimmers.
+- `texture/background/homescreen.png` — Tenna-inspired wallpaper.
+- `texture/background/functionscreen.png` — red/yellow static background.
+- `texture/preview.png` — theme thumbnail.
+- `texture/function_icon/` — four mapped icons and glow variants.
+- `sce_sys/icon0.png` — theme-list icon.
+- `sce_sys/pic1.png` — 1920×1080 theme image.
+- `STAGING-MANIFEST.json` — dimensions, modes, byte sizes, SHA-256, descriptor and optional-audio state.
+- `sound/bgm_home.at9` — optional, only when a converted AT9 is supplied.
 
-The six concept icons are not six interchangeable PS4 function slots. The staging script maps four concepts to `setting`, `friend`, `message`, and `power`. Network and Media remain source artwork until their correct destination slots are confirmed.
+The theme descriptor uses the maintained reference project's documented XML shape. The values are implementation choices for TV TIME, not a guarantee that every theme field behaves identically on every system-software release.
+
+The `homebgm-enable` flag remains `False` by default. The WAV master is not a PS4 home BGM asset; the theme only enables music when a non-empty `.at9` file is supplied.
 
 ## Generate and review
+
 Requirements: Python 3.10+, Pillow, and CairoSVG.
 
 ```bash
@@ -29,27 +36,61 @@ python tools/make_review_sheet.py --staging build/tv-time/Image0 --output build/
 python tools/preview_home_ui.py --wallpaper build/tv-time/Image0/texture/background/homescreen.png --output build/tv-time/home-ui-preview.png
 ```
 
+To use converted home music, first create the original WAV master and convert it with a compatible, separately obtained Sony `at9tool`. The encoder is proprietary and is not bundled or redistributed here.
+
+```bash
+python tools/generate_home_bgm.py
+python tools/convert_home_bgm.py --at9tool /path/to/your/at9tool
+python tools/prepare_assets.py --at9 build/tv-time/sound/bgm_home.at9 --force
+python tools/validate_staging.py
+```
+
+`--at9` accepts an already-converted `.at9` file, not a WAV. It is size-checked and copied to `Image0/sound/bgm_home.at9`; the descriptor then enables home music. The converter checks WAV format, uses the requested 144 kbps loop settings, and checks the output size, but playback still needs real-console testing.
+
 Use `--force` only when intentionally replacing an existing staging directory.
 
-The validator checks all 12 expected PNGs, formats, dimensions, manifest metadata, and hashes. The contact sheet assembles the artwork. The UI preview adds an illustrative status row and app shelf to check contrast and composition; it is not an exact PS4 UI capture. GitHub Actions runs all four scripts and uploads the staging tree and review images as a temporary artifact.
+The validator checks all 13 PNG assets, formats, dimensions, manifest metadata and hashes; validates the required theme descriptor fields and palette; and verifies that the home-music flag matches the presence of the optional AT9 file.
 
-## Remaining questions
-- [x] Generate and inspect initial artwork contact sheet.
-- [x] Add illustrative home-screen overlay preview.
-- [x] Review overlay preview; move the illustrative app shelf lower so Tenna's face and main title remain unobstructed.
-- [ ] Confirm theme format and export limits against maintained references and target-console compatibility.
-- [ ] Decide whether static function-screen background is sufficient; animated SVG is source artwork, not a console-ready animation.
-- [ ] Confirm correct slots for Network and Media.
-- [ ] Keep the game-launch channel-switch idea separate; theme assets should not be assumed to intercept game launches.
+## Separate dynamic-scene candidate
+
+Run:
+
+```bash
+python tools/build_dynamic_scene.py --output build/tv-time-dynamic
+```
+
+The candidate contains twelve 640×360 DXT1 frames, `plane.mdx`, and RAF `index.xml`. It is **not merged into the default static theme**. When a RAF scene is active, it replaces both the home and function background screens. That would hide the Tenna wallpaper as the actual home background, so the default TV TIME variant remains static; the animation is retained as an alternate compatibility experiment.
+
+See [DYNAMIC-SCENE-POC.md](DYNAMIC-SCENE-POC.md) for its structure, limits, and testing boundary.
+
+## Remaining work
+
+- [x] Generate the Tenna wallpaper and red/yellow function-screen assets.
+- [x] Add the static theme descriptor with red system colour and yellow focus accent.
+- [x] Stage `sce_sys/icon0.png` and `sce_sys/pic1.png`.
+- [x] Validate the static descriptor and generated assets in CI.
+- [x] Generate a shared XDM plane model and the dynamic RAF candidate.
+- [ ] Complete AT9 conversion and test home music playback.
+- [ ] Generate `sce_sys/param.sfo` with a verified, legitimate toolchain.
+- [ ] Assemble and validate a theme `.pkg` with a verified, legitimate toolchain.
+- [ ] Install and test the static theme on a compatible console.
+- [ ] Test the dynamic candidate separately on a compatible theme test environment.
+- [ ] Confirm the correct destination slots for Network and Media concept icons.
+- [ ] Keep the proposed game-launch channel-switch effect separate; a theme does not provide a documented game-launch event hook.
 
 ## Limitations
-- Animated SVG is source artwork, not a console-ready scene.
-- The wallpaper is original project artwork; no game-ripped assets or soundtrack are bundled.
+
+- The UI overlay preview is illustrative, not an exact PS4 capture.
+- Network and Media remain concept artwork until their correct slots are verified.
+- The dynamic scene is structurally validated in CI but has not been accepted or displayed by the target CUH-1115A / reported firmware 14.02.
+- No game-ripped artwork or soundtrack is bundled.
 - Console model and firmware details are user-reported; no compatibility guarantee is made.
 
 ## References
+
 - PS4 Developer Wiki — [Themes](https://www.psdevwiki.com/ps4/Themes)
 - PS4 Developer Wiki — [PARAM.SFO](https://www.psdevwiki.com/ps4/PARAM.SFO)
-- Imxnxl — [PS4 Ultimate Theme Creator](https://github.com/Imxnxl/PS4-Ultimate-Theme-Creator) (builder-specific notes)
+- Imxnxl — [PS4 Ultimate Theme Creator](https://github.com/Imxnxl/PS4-Ultimate-Theme-Creator) (working-theme implementation reference; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md))
+- ConsoleMods Wiki — [PS4 Custom Themes](https://consolemods.org/wiki/PS4%3ACustom_Themes)
 
 These are technical/community references, not universal guarantees.
