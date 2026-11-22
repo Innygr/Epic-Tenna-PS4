@@ -27,12 +27,14 @@
 - [x] Add optional `--param-sfo` staging and CI validation in a separate fixture tree
 - [x] Generate and CI-validate a theme-mode GP4 project description
 - [x] Add a pre-package input audit with per-file hashes and a CI fixture identity guard
+- [x] Add a theme-specific PKG maker wrapper with a pre-build audit and post-build package inventory validation
+- [x] Add stubbed unit tests for the PKG maker orchestration and failure paths
 - [ ] Confirm the dynamic scene on a compatible PS4 theme test environment
 
 ## Packaging
 - [ ] Complete home music ATRAC9 conversion and verify playback
 - [ ] Generate a production `sce_sys/param.sfo` with a chosen non-conflicting title ID and stage it in Image0
-- [ ] Assemble and validate a theme `.pkg` using a verified, legitimate toolchain
+- [ ] Run the PKG maker with a separately supplied compatible `orbis-pub-cmd` toolchain and inspect an actual production package
 - [ ] Install and test the static TV TIME theme on a compatible console
 - [ ] Test the dynamic candidate separately
 
