@@ -173,7 +173,7 @@ def validate_param_sfx(
         raise ParamSfxError("TITLE exceeds the 128-byte UTF-8 limit")
     pubtoolinfo = params["PUBTOOLINFO"][1]
     if params["PUBTOOLINFO"][0] != "utf8" or not re.fullmatch(
-        r"c_date=[0-9]{8}(?:,bgmhome_loud=-?(?:[0-9]{1,3})\\.[0-9]{2})?",
+        r"c_date=[0-9]{8}(?:,bgmhome_loud=-?(?:[0-9]{1,3})\.[0-9]{2})?",
         pubtoolinfo,
     ):
         raise ParamSfxError(
