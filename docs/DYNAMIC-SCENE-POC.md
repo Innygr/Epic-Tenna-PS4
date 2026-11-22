@@ -1,51 +1,54 @@
 # TV TIME dynamic-scene proof of concept
 
-## Current output
+## Generated scene
 
-`tools/build_dynamic_scene.py` renders the original
-`assets/tv-time-flow-motion-study.svg` into a looping sequence of 12
-640×360 RGB frames, encodes each frame as a legacy DXT1 DDS texture, and writes
-an RAF `index.xml` with one material and actor per frame.
+Run:
 
-The exporter is intentionally separate from the static artwork staging. It
-writes to `build/tv-time-dynamic/` by default and refuses to overwrite a
-non-empty output directory unless `--force` is supplied.
+```bash
+python -m pip install -r requirements-packaging.txt
+python tools/build_dynamic_scene.py --output build/tv-time-dynamic
+```
+
+The exporter writes `scene/background.raf/` containing twelve original
+640×360 DXT1 frames, a shared `plane.mdx` XDM model, and the RAF
+`index.xml`. The scene uses one plane model, a material and actor for each
+frame, and a looping sequence that switches frame visibility every 0.12
+seconds (about 8.3 frames per second).
+
+The model generator derives the plane dimensions from the reference
+perspective camera's 29-degree vertical field of view and 16:9 aspect ratio.
+The output model is parsed again by the exporter before it is written; tests
+also verify the XDM record structure, four 14-byte vertices, and index buffer.
+
+The XML model entry uses the scene format's `file="plane.fbx"` identifier,
+while the physical XDM model is stored as `plane.mdx` in the same RAF folder.
+This pairing follows the documented working-theme convention.
 
 ## Conservative budget
 
-The current candidate uses 12 frames at 640×360. DXT1 stores 4×4 blocks in
-8 bytes, so each frame payload is 115,200 bytes plus a 128-byte DDS header.
-The full frame set is approximately 1.32 MiB, comfortably below the
-conservative 6 MiB DDS budget reported by the newer PS4 Ultimate Theme Creator
-documentation.
+Each 640×360 DXT1 frame has a 128-byte DDS header and 115,200-byte payload.
+Twelve frames therefore use 1,384,? bytes (about 1.32 MiB), before the small
+model and XML files, comfortably below the newer tool's reported 6 MiB DDS
+budget and 48-frame ceiling.
 
 Older community tutorials report a 16 MiB frame/video limit and recommend
 34 frames at 1280×720. These figures conflict with the newer tool's reported
-6 MiB / 48-frame limits. We therefore keep the candidate small and treat both
-figures as community-reported rather than guaranteed limits for every system
-software version.
+6 MiB / 48-frame limits. We keep this candidate small and treat community
+figures as reported constraints, not universal firmware guarantees.
 
-## Important limitations
+## Compatibility boundary
 
-This is an **experimental scene candidate**, not an installable theme:
+This is a **complete dynamic-scene candidate**, not an installable theme:
 
-- The exporter currently writes DDS frames and RAF XML only.
-- The RAF references `BG.mdx`; a validated plane model is still outstanding.
+- The RAF XML, XDM shared plane, and compressed frames are generated together.
 - No `theme.xml`, `param.sfo`, keystone, GP4 project, or PKG is generated.
-- The exact scene, model, texture, and package compatibility has not been
-  tested on the target CUH-1115A / reported firmware 14.02.
-- The 12-frame animation is a first motion pass. Frame pacing and visual
-  smoothness need review in a real PS4 theme environment.
-
-## Validation in CI
-
-The workflow runs the exporter, checks the DDS headers and fixed-size frame
-budget, and parses the RAF XML to verify that material, actor, and sequence
-counts agree. Unit tests also check a rendered frame and the generated scene
-structure.
-
-A green CI run proves that the files are generated consistently; it does not
-prove that the PS4 accepts or displays them.
+- The scene has not been tested on the target CUH-1115A / reported firmware
+  14.02. A green CI run proves deterministic generation and structural checks,
+  not that the target PS4 accepts or displays it.
+- The 12-frame animation and its pacing still need visual review on a
+  compatible theme test environment.
+- Static background assets remain the fallback while dynamic-scene support is
+  being tested.
 
 ## References
 
@@ -53,8 +56,10 @@ prove that the PS4 accepts or displays them.
   https://www.psdevwiki.com/ps4/Themes
 - ConsoleMods Wiki, PS4 Custom Themes:
   https://consolemods.org/wiki/PS4%3ACustom_Themes
-- PS4 Ultimate Theme Creator (MIT-licensed project; its README documents its
-  current real-console validation claims and format constraints):
-  https://github.com/Imxnxl/PS4-Ultimate-Theme-Creator
+- PS4 Ultimate Theme Creator (MIT; reference for the documented MDX/RAF
+  working-theme layout): https://github.com/Imxnxl/PS4-Ultimate-Theme-Creator
 - Dynamic theme sample:
   https://github.com/speedrod55/PS4DynamicThemeSample
+
+See [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) for the reference
+project's license notice.
