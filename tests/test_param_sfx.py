@@ -33,6 +33,22 @@ class ParamSfxTests(unittest.TestCase):
         self.assertNotIn("APP_VER", params)
         self.assertEqual(validate_param_sfx(xml_text)["TITLE"], "TV TIME")
 
+    def test_optional_home_music_loudness_is_recorded(self):
+        xml_text = self.build(bgm_loudness=-23.47)
+        parsed = validate_param_sfx(xml_text)
+        self.assertEqual(parsed["PUBTOOLINFO"], "c_date=20261121,bgmhome_loud=-23.47")
+
+    def test_invalid_home_music_loudness_is_rejected(self):
+        for value in (-101.0, 1.0, float("nan"), float("inf")):
+            with self.subTest(value=value):
+                with self.assertRaises(ParamSfxError):
+                    self.build(bgm_loudness=value)
+
+    def test_malformed_home_music_loudness_is_rejected(self):
+        xml_text = self.build(bgm_loudness=-23.47).replace("bgmhome_loud=-23.47", "bgmhome_loud=very-loud")
+        with self.assertRaises(ParamSfxError):
+            validate_param_sfx(xml_text)
+
     def test_title_is_xml_escaped_and_round_trips(self):
         xml_text = self.build(title='TV TIME & "ON AIR"')
         parsed = validate_param_sfx(xml_text)
