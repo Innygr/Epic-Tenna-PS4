@@ -20,17 +20,26 @@
 - [ ] Confirm wallpaper readability with actual console UI
 - [x] Build an experimental original TV TIME dynamic-scene candidate (12 DXT1 DDS frames + RAF XML)
 - [x] Generate and validate the shared XDM plane model and align RAF XML with the reference scene structure
+- [x] Generate static theme.xml descriptor with red system colour and yellow focus accent
+- [x] Stage the `sce_sys/pic1.png` package image
 - [ ] Confirm the dynamic scene on a compatible PS4 theme test environment
 
+## Packaging
+- [ ] Complete home music ATRAC9 conversion and verify playback
+- [ ] Generate `sce_sys/param.sfo` using a verified, legitimate toolchain
+- [ ] Assemble and validate a theme `.pkg` using a verified, legitimate toolchain
+- [ ] Install and test the static TV TIME theme on a compatible console
+- [ ] Test the dynamic candidate separately
+
 ## Platform compatibility
-- [ ] Validate the documented theme format and package behaviour on a compatible test environment; firmware 14.02 compatibility is not yet confirmed
-- [x] Research static versus dynamic background options; retain static staging baseline and plan a separate dynamic-scene proof of concept
+- [ ] Validate the theme format and package behaviour on a compatible test environment; firmware 14.02 compatibility is not yet confirmed
+- [x] Research static versus dynamic background options; keep the dynamic scene separate because it replaces both theme background screens
 - [x] Assess theme-level game-launch channel-switch support; no theme event interface is documented, so keep this separate from theme packaging
 - [x] Document limitations without assuming community tools behave identically
 
 ## Acceptance criteria
 - Artwork is original, consistently branded, and visually legible.
-- System background uses red/yellow independently of wallpaper.
-- Wallpaper remains legible with PS4 UI overlaid.
+- The default theme keeps Tenna as the home-screen wallpaper.
+- The function-screen and focus accents use the red/yellow broadcast palette.
 - Every included asset has documented provenance.
 - No unverified compatibility requirement is presented as fact.
