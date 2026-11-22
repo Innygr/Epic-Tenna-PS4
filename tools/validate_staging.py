@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the generated TV TIME PS4-theme asset staging tree."""
+"""Validate TV TIME PNG assets, theme.xml, and staging manifest."""
 from __future__ import annotations
 
 import argparse
@@ -9,11 +9,14 @@ from pathlib import Path, PurePosixPath
 
 from PIL import Image
 
+from build_theme_descriptor import validate_theme_xml
+
 EXPECTED = {
     "texture/background/homescreen.png": (1920, 1080),
     "texture/background/functionscreen.png": (1920, 1080),
     "texture/preview.png": (740, 416),
     "sce_sys/icon0.png": (512, 512),
+    "sce_sys/pic1.png": (1920, 1080),
     "texture/function_icon/setting.png": (128, 128),
     "texture/function_icon/setting_glow.png": (152, 152),
     "texture/function_icon/friend.png": (128, 128),
@@ -45,8 +48,8 @@ def main() -> int:
         parser.error(f"manifest is missing: {manifest_path}")
 
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest.get("status") != "staging-assets-only; not an installable package":
-        raise SystemExit("FAIL: manifest does not identify this as staging-only")
+    if manifest.get("status") != "theme-staging-only; not an installable package":
+        raise SystemExit("FAIL: manifest does not identify this as theme staging only")
     if "installable .pkg" not in manifest.get("not_generated", []):
         raise SystemExit("FAIL: manifest does not explicitly state that no .pkg was generated")
 
@@ -68,7 +71,7 @@ def main() -> int:
     if set(indexed) != set(EXPECTED):
         missing = sorted(set(EXPECTED) - set(indexed))
         extra = sorted(set(indexed) - set(EXPECTED))
-        raise SystemExit(f"FAIL: manifest file set mismatch; missing={missing}, extra={extra}")
+        raise SystemExit(f"FAIL: manifest PNG file set mismatch; missing={missing}, extra={extra}")
 
     for rel, dimensions in EXPECTED.items():
         path = root / rel
@@ -96,8 +99,38 @@ def main() -> int:
         if entry.get("sha256") != digest(path):
             raise SystemExit(f"FAIL: SHA-256 mismatch for {rel}")
 
-    print(f"PASS: {len(EXPECTED)} PNG assets validated; manifest hashes and dimensions match.")
-    print("NOTE: validation covers staging assets only, not theme.xml, param.sfo, RAF scenes, or a PS4 package.")
+    descriptor_path = root / "theme.xml"
+    descriptor_meta = manifest.get("theme_descriptor", {})
+    if not descriptor_path.is_file() or descriptor_meta.get("path") != "theme.xml":
+        raise SystemExit("FAIL: theme.xml or its manifest metadata is missing")
+    if descriptor_meta.get("bytes") != descriptor_path.stat().st_size:
+        raise SystemExit("FAIL: theme.xml byte count does not match the manifest")
+    if descriptor_meta.get("sha256") != digest(descriptor_path):
+        raise SystemExit("FAIL: theme.xml SHA-256 does not match the manifest")
+    try:
+        descriptor = validate_theme_xml(descriptor_path.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise SystemExit(f"FAIL: theme.xml validation failed: {exc}") from exc
+    if descriptor["themecolor"] != 2 or descriptor["focuscolor"] != "#FFFFD400":
+        raise SystemExit("FAIL: TV TIME theme descriptor must use red system colour and yellow focus accent")
+
+    bgm_path = root / "sound" / "bgm_home.at9"
+    bgm_included = bgm_path.is_file()
+    if descriptor["homebgm_enabled"] != bgm_included:
+        raise SystemExit("FAIL: homebgm-enable must match the presence of sound/bgm_home.at9")
+    optional_audio = manifest.get("optional_audio", {})
+    if bool(optional_audio.get("included")) != bgm_included:
+        raise SystemExit("FAIL: optional audio manifest flag does not match the staged AT9 file")
+    if bgm_included:
+        size = bgm_path.stat().st_size
+        if not 0 < size <= 2 * 1024 * 1024:
+            raise SystemExit("FAIL: staged AT9 must be non-empty and no larger than 2 MiB")
+        if optional_audio.get("bytes") != size:
+            raise SystemExit("FAIL: staged AT9 byte count does not match the manifest")
+
+    print(f"PASS: {len(EXPECTED)} PNG assets and theme.xml validated; manifest hashes match.")
+    print(f"PASS: red theme colour + yellow focus accent; home music {'enabled' if bgm_included else 'disabled'}")
+    print("NOTE: param.sfo, package creation, and real-console compatibility are still outstanding.")
     return 0
 
 
