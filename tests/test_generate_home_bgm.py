@@ -38,12 +38,12 @@ class GenerateHomeBgmTests(unittest.TestCase):
             self.assertGreater(max(abs(x) for x in samples), 1000)
 
             # Both edge fades should be quieter than the adjacent interior.
-            frame_samples = 2
-            fade_frames = round(0.025 * RATE)
-            first_edge = samples[: 2 * fade_frames]
-            first_inner = samples[2 * fade_frames : 4 * fade_frames]
-            last_inner = samples[-4 * fade_frames : -2 * fade_frames]
-            last_edge = samples[-2 * fade_frames :]
+            edge_frames = round(0.005 * RATE)
+            edge_samples = 2 * edge_frames
+            first_edge = samples[:edge_samples]
+            first_inner = samples[edge_samples : 2 * edge_samples]
+            last_inner = samples[-2 * edge_samples : -edge_samples]
+            last_edge = samples[-edge_samples:]
             rms = lambda block: math.sqrt(sum(x * x for x in block) / len(block))
             self.assertLess(rms(first_edge), rms(first_inner))
             self.assertLess(rms(last_edge), rms(last_inner))
