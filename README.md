@@ -15,12 +15,13 @@ A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHE
 
 ## Packaging preparation
 - [Packaging readiness and staging instructions](docs/PACKAGING-READINESS.md)
-- [Asset preparation](tools/prepare_assets.py) · [Theme descriptor generator](tools/build_theme_descriptor.py) · [SFO metadata input generator](tools/build_param_sfx.py) · [Validator](tools/validate_staging.py)
+- [Asset preparation](tools/prepare_assets.py) · [Theme descriptor generator](tools/build_theme_descriptor.py) · [SFO metadata input generator](tools/build_param_sfx.py) · [Binary SFO writer](tools/build_param_sfo.py) · [Validator](tools/validate_staging.py)
 - [Dynamic-scene proof of concept](docs/DYNAMIC-SCENE-POC.md)
 - Install dependencies: `python -m pip install -r requirements-packaging.txt`.
 - Generate the static theme tree: `python tools/prepare_assets.py`.
 - Validate the static theme tree: `python tools/validate_staging.py`.
 - Generate the package metadata input (using your chosen title ID): `python tools/build_param_sfx.py --title-id CUSA12345`.
+- Convert that XML input to a binary SFO: `python tools/build_param_sfo.py --input build/tv-time/package-input/param.sfx --output build/tv-time/package-input/param.sfo`.
 - Generate the optional dynamic scene candidate separately: `python tools/build_dynamic_scene.py --output build/tv-time-dynamic`.
 - Create review outputs with `tools/make_review_sheet.py` and `tools/preview_home_ui.py`.
 
