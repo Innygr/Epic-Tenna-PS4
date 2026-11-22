@@ -34,7 +34,7 @@ class DynamicSceneTests(unittest.TestCase):
 
     def test_plane_model_has_validated_xdm_structure(self):
         data = dynamic.plane_model_bytes()
-        self.assertTrue(data.startswith(b"XDM.00.1MSP\\x00" + b"\\x00" * 4))
+        self.assertTrue(data.startswith(b"XDM.00.1MSP\x00" + b"\x00" * 4))
         result = dynamic.validate_plane_model(data)
         self.assertEqual(result["vertices"], 4)
         self.assertEqual(result["vertex_stride"], 14)
