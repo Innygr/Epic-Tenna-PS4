@@ -37,6 +37,17 @@ class GenerateHomeBgmTests(unittest.TestCase):
             self.assertLess(max(abs(x) for x in samples), 32767)
             self.assertGreater(max(abs(x) for x in samples), 1000)
 
+            # Check actual stereo content, not just the WAV channel header.
+            left = samples[0::2]
+            right = samples[1::2]
+            mean_channel_delta = sum(abs(l - r) for l, r in zip(left, right)) / len(left)
+            self.assertGreater(mean_channel_delta, 10)
+            channel_rms = lambda block: math.sqrt(sum(x * x for x in block) / len(block))
+            left_rms = channel_rms(left)
+            right_rms = channel_rms(right)
+            self.assertGreater(left_rms / right_rms, 0.75)
+            self.assertLess(left_rms / right_rms, 1.25)
+
             # Both edge fades should be quieter than the adjacent interior.
             edge_frames = round(0.005 * RATE)
             edge_samples = 2 * edge_frames
