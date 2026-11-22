@@ -15,7 +15,7 @@
 - [x] Add illustrative home-screen UI overlay preview
 - [x] Add GitHub Actions render, validation, and review-artifact workflow
 - [x] Inspect initial staging images and contact sheet
-- [ ] Review illustrative home-screen overlay and adjust artwork if necessary
+- [x] Review illustrative home-screen overlay and improve shelf readability over the Tenna foreground
 - [ ] Confirm icon slots and export dimensions against selected supported format
 - [ ] Confirm wallpaper readability with actual console UI
 - [x] Build an experimental original TV TIME dynamic-scene candidate (12 DXT1 DDS frames + RAF XML)
