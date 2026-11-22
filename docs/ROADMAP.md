@@ -23,11 +23,12 @@
 - [x] Generate static theme.xml descriptor with red system colour and yellow focus accent
 - [x] Stage the `sce_sys/pic1.png` package image
 - [x] Generate and CI-validate the PS4 theme `param.sfx` XML metadata input
+- [x] Add binary PSF 1.1 writer and round-trip validator for `param.sfo`
 - [ ] Confirm the dynamic scene on a compatible PS4 theme test environment
 
 ## Packaging
 - [ ] Complete home music ATRAC9 conversion and verify playback
-- [ ] Convert `param.sfx` into `sce_sys/param.sfo` using a verified, legitimate toolchain
+- [ ] Generate a production `sce_sys/param.sfo` with a chosen non-conflicting title ID and stage it in Image0
 - [ ] Assemble and validate a theme `.pkg` using a verified, legitimate toolchain
 - [ ] Install and test the static TV TIME theme on a compatible console
 - [ ] Test the dynamic candidate separately
