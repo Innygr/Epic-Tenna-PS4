@@ -53,6 +53,10 @@ jobs:
         run: python tools/build_param_sfx.py --title-id CUSA00000 --date 20261121 --output "$RUNNER_TEMP/tv-time/package-input/param-ci-fixture.sfx"
       - name: Build binary param.sfo from CI fixture
         run: python tools/build_param_sfo.py --input "$RUNNER_TEMP/tv-time/package-input/param-ci-fixture.sfx" --output "$RUNNER_TEMP/tv-time/package-input/param-ci-fixture.sfo"
+      - name: Prepare theme staging with binary SFO fixture
+        run: python tools/prepare_assets.py --output "$RUNNER_TEMP/tv-time/Image0-with-sfo" --param-sfo "$RUNNER_TEMP/tv-time/package-input/param-ci-fixture.sfo"
+      - name: Validate theme staging with binary SFO fixture
+        run: python tools/validate_staging.py --staging "$RUNNER_TEMP/tv-time/Image0-with-sfo"
       - name: Create visual review sheet
         run: python tools/make_review_sheet.py --staging "$RUNNER_TEMP/tv-time/Image0" --output "$RUNNER_TEMP/tv-time/tv-time-review-sheet.png"
       - name: Create illustrative home-screen UI overlay
@@ -63,6 +67,7 @@ jobs:
           name: tv-time-staging-assets
           path: |
             ${{ runner.temp }}/tv-time/Image0/
+            ${{ runner.temp }}/tv-time/Image0-with-sfo/
             ${{ runner.temp }}/tv-time-dynamic/
             ${{ runner.temp }}/tv-time/sound/bgm_home.wav
             ${{ runner.temp }}/tv-time/package-input/param-ci-fixture.sfx
