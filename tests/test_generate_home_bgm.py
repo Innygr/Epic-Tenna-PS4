@@ -59,6 +59,18 @@ class GenerateHomeBgmTests(unittest.TestCase):
             self.assertLess(rms(first_edge), rms(first_inner))
             self.assertLess(rms(last_edge), rms(last_inner))
 
+            # The four 8-second sections should have an intentional energy arc:
+            # quieter intro, fuller main, quieter breakdown, stronger finale.
+            section_rms = []
+            frames_per_section = 8 * RATE
+            for section in range(4):
+                start = section * frames_per_section * 2
+                end = (section + 1) * frames_per_section * 2
+                section_rms.append(rms(samples[start:end]))
+            self.assertGreater(section_rms[1], section_rms[0] * 1.06)
+            self.assertLess(section_rms[2], section_rms[1] * 0.90)
+            self.assertGreater(section_rms[3], section_rms[2] * 1.10)
+
 
 if __name__ == "__main__":
     unittest.main()
