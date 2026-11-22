@@ -17,7 +17,7 @@
 - [x] Generate a red/yellow stereo waveform overview for the original home-music master
 - [x] Add four-section energy contrast and regression tests to the original home-music arrangement
 - [x] Inspect initial staging images and contact sheet
-- [x] Review illustrative home-screen overlay and improve shelf readability over the Tenna foreground
+- [x] Review illustrative home-screen overlay and confine the app shelf to the left so Tenna's foreground remains unobstructed
 - [ ] Confirm icon slots and export dimensions against selected supported format
 - [ ] Confirm wallpaper readability with actual console UI
 - [x] Build an experimental original TV TIME dynamic-scene candidate (12 DXT1 DDS frames + RAF XML)
