@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from analyze_home_bgm import analyze
+from preview_home_bgm import render as render_waveform
 from generate_home_bgm import RATE, render
 
 
@@ -27,6 +28,15 @@ class AnalyzeHomeBgmTests(unittest.TestCase):
         self.assertEqual(report["combined"]["clipped_samples"], 0)
         self.assertLess(abs(report["left"]["dc_offset"]), 100)
         self.assertLess(abs(report["right"]["dc_offset"]), 100)
+
+    def test_waveform_preview_is_created(self):
+        with tempfile.TemporaryDirectory() as temp:
+            source = Path(temp) / "bgm_home.wav"
+            output = Path(temp) / "bgm_home-waveform.png"
+            render(source)
+            render_waveform(source, output)
+            self.assertTrue(output.is_file())
+            self.assertGreater(output.stat().st_size, 10_000)
 
     def test_rejects_empty_audio(self):
         with tempfile.TemporaryDirectory() as temp:
