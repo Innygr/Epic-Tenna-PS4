@@ -22,6 +22,7 @@ A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHE
 - Validate the static theme tree: `python tools/validate_staging.py`.
 - Generate the package metadata input (using your chosen title ID): `python tools/build_param_sfx.py --title-id CUSA12345`.
 - Convert that XML input to a binary SFO: `python tools/build_param_sfo.py --input build/tv-time/package-input/param.sfx --output build/tv-time/package-input/param.sfo`.
+- Stage it in a separate theme tree: `python tools/prepare_assets.py --output build/tv-time/Image0-with-sfo --param-sfo build/tv-time/package-input/param.sfo`.
 - Generate the optional dynamic scene candidate separately: `python tools/build_dynamic_scene.py --output build/tv-time-dynamic`.
 - Create review outputs with `tools/make_review_sheet.py` and `tools/preview_home_ui.py`.
 
