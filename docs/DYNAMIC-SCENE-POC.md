@@ -27,7 +27,7 @@ This pairing follows the documented working-theme convention.
 ## Conservative budget
 
 Each 640×360 DXT1 frame has a 128-byte DDS header and 115,200-byte payload.
-Twelve frames therefore use 1,384,? bytes (about 1.32 MiB), before the small
+Twelve frames therefore use 1,383,936 bytes (about 1.32 MiB), before the small
 model and XML files, comfortably below the newer tool's reported 6 MiB DDS
 budget and 48-frame ceiling.
 
