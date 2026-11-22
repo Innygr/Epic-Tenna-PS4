@@ -106,7 +106,8 @@ class PackageAuditTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             staging, gp4 = self.make_inputs(Path(temp))
             theme = staging / "theme.xml"
-            theme.write_text(theme.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+            original = theme.read_bytes()
+            theme.write_bytes(original[:-1] + b"!")
             with self.assertRaisesRegex(PackageAuditError, "SHA-256"):
                 build_package_audit(staging, gp4)
 
