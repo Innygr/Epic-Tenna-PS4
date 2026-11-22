@@ -32,6 +32,7 @@
 - [ ] Confirm the dynamic scene on a compatible PS4 theme test environment
 
 ## Packaging
+- [x] Add measured AT9 loudness extraction and SFO metadata validation
 - [ ] Complete home music ATRAC9 conversion and verify playback
 - [ ] Generate a production `sce_sys/param.sfo` with a chosen non-conflicting title ID and stage it in Image0
 - [ ] Run the PKG maker with a separately supplied compatible `orbis-pub-cmd` toolchain and inspect an actual production package
