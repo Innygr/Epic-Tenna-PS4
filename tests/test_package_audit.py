@@ -15,7 +15,9 @@ from build_param_sfo import build_param_sfo_bytes
 
 
 class PackageAuditTests(unittest.TestCase):
-    def make_inputs(self, root: Path, title_id: str = "CUSA12345") -> tuple[Path, Path]:
+    def make_inputs(
+        self, root: Path, title_id: str = "CUSA12345", *, bgm_loudness: float | None = None
+    ) -> tuple[Path, Path]:
         staging = root / "Image0"
         (staging / "sce_sys").mkdir(parents=True)
         (staging / "texture" / "background").mkdir(parents=True)
@@ -35,6 +37,7 @@ class PackageAuditTests(unittest.TestCase):
             content_prefix="UP9000",
             edition="TVTIME0000000000",
             date_text="20261121",
+            bgm_loudness=bgm_loudness,
         )
         sfo_bytes = build_param_sfo_bytes(sfx)
         sfo_path = staging / "sce_sys" / "param.sfo"
@@ -42,6 +45,9 @@ class PackageAuditTests(unittest.TestCase):
         (staging / "sce_sys" / "icon0.png").write_bytes(b"icon-fixture")
         (staging / "texture" / "background" / "homescreen.png").write_bytes(b"wallpaper-fixture")
         content_id = f"UP9000-{title_id}_00-TVTIME0000000000"
+        if bgm_loudness is not None:
+            (staging / "sound").mkdir(parents=True)
+            (staging / "sound" / "bgm_home.at9").write_bytes(b"fixture-at9")
         manifest = {
             "status": "theme-staging-only; not an installable package",
             "not_generated": ["installable .pkg"],
@@ -50,7 +56,11 @@ class PackageAuditTests(unittest.TestCase):
                 "bytes": theme_path.stat().st_size,
                 "sha256": hashlib.sha256(theme_path.read_bytes()).hexdigest(),
             },
-            "optional_audio": {"included": False},
+            "optional_audio": {
+                "included": bgm_loudness is not None,
+                "path": "sound/bgm_home.at9",
+                "bytes": 12 if bgm_loudness is not None else 0,
+            },
             "package_metadata": {
                 "path": "sce_sys/param.sfo",
                 "included": True,
@@ -100,6 +110,27 @@ class PackageAuditTests(unittest.TestCase):
             staging, gp4 = self.make_inputs(Path(temp))
             (staging / "texture" / "background" / "extra.png").write_bytes(b"not-in-gp4")
             with self.assertRaises(PackageAuditError):
+                build_package_audit(staging, gp4)
+
+    def test_staged_music_requires_measured_sfo_loudness(self):
+        with tempfile.TemporaryDirectory() as temp:
+            staging, gp4 = self.make_inputs(Path(temp), bgm_loudness=-23.47)
+            report = build_package_audit(staging, gp4)
+            self.assertTrue(report["theme"]["home_music_at9_included"])
+
+    def test_staged_music_without_loudness_metadata_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            staging, gp4 = self.make_inputs(Path(temp))
+            audio = staging / "sound" / "bgm_home.at9"
+            audio.parent.mkdir(parents=True)
+            audio.write_bytes(b"fixture-at9")
+            manifest_path = staging / "STAGING-MANIFEST.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["optional_audio"] = {
+                "included": True, "path": "sound/bgm_home.at9", "bytes": audio.stat().st_size
+            }
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            with self.assertRaisesRegex(PackageAuditError, "bgmhome_loud"):
                 build_package_audit(staging, gp4)
 
     def test_manifest_hash_mismatch_is_rejected(self):
