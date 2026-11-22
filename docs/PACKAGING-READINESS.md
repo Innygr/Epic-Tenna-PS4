@@ -4,7 +4,7 @@
 
 The repository now produces a **static PS4 theme staging tree** with a `theme.xml` descriptor and a separate **experimental dynamic-scene candidate**. The static tree preserves the Tenna home wallpaper and the red/yellow function-screen background. CI validates the generated PNGs, descriptor, manifest, dynamic scene, and original WAV music master.
 
-The pipeline can stage an optional binary `sce_sys/param.sfo` and generate a theme GP4 project description. It does not create or sign a `.pkg`, or prove compatibility with the target console. A staging folder, audit report, GP4 file, or ZIP is not an installable theme.
+The pipeline stages an optional binary `sce_sys/param.sfo`, generates a theme GP4 project description, audits the inputs, and includes a theme-specific `.pkg` maker wrapper. The maker calls a separately supplied compatible `orbis-pub-cmd` executable; the proprietary tool and its adjacent `ext/` folder are not bundled. The repository has not yet generated a production `.pkg` or proved compatibility with the target console. A staging folder, audit report, GP4 file, or ZIP is not an installable theme.
 
 ## Default static staging layout
 
@@ -98,7 +98,33 @@ python tools/audit_package_inputs.py \\
   --output build/tv-time/package-input/package-input-audit.json
 ```
 
-The audit re-checks the theme palette, manifest hashes, SFO identity and theme category, optional AT9 state, and exact GP4-to-staging file inventory. It writes a JSON report containing a SHA-256 and byte count for each package input. It refuses the CI-only `CUSA00000` identity by default; `--allow-ci-fixture` exists only for explicit fixture validation, and the report labels that result as fixture-only. The audit report is stored outside `Image0` and is not added to the theme package. Passing this audit still does not create a `.pkg` or prove console compatibility.
+The audit re-checks the theme palette, manifest hashes, SFO identity and theme category, optional AT9 state, and exact GP4-to-staging file inventory. It writes a JSON report containing a SHA-256 and byte count for each package input. It refuses the CI-only `CUSA00000` identity by default; `--allow-ci-fixture` exists only for explicit fixture validation, and the report labels that result as fixture-only. The audit report is stored outside `Image0` and is not added to the theme package. Passing this audit does not itself create a `.pkg` or prove console compatibility.
+
+## Build the theme .pkg
+
+The repository includes `tools/build_theme_pkg.py`, which wraps the theme-capable `img_create` and `img_file_list` commands. It uses the already-generated `pkg_ps4_theme` GP4 and the theme-specific SFO metadata (`CATEGORY=ac`, `IRO_TAG=2`). Do not substitute a generic app-package builder that rewrites the SFO as a game/application; a correctly formed theme package must retain the theme metadata.
+
+The external tool is not included in this repository. Supply a compatible `orbis-pub-cmd` executable with its adjacent `ext/` directory. On Windows, the default location is `tools/orbis-pub-cmd.exe`. On Linux, use the Windows executable through Wine:
+
+```bash
+python tools/build_theme_pkg.py \\
+  --staging build/tv-time/production/Image0 \\
+  --gp4 build/tv-time/package-input/tv-time.gp4 \\
+  --output build/tv-time/package-output/TV-TIME.pkg
+
+# Linux with a separately installed Wine and a compatible Windows toolchain:
+python tools/build_theme_pkg.py \\
+  --staging build/tv-time/production/Image0 \\
+  --gp4 build/tv-time/package-input/tv-time.gp4 \\
+  --output build/tv-time/package-output/TV-TIME.pkg \\
+  --orbis-pub-cmd /path/to/orbis-pub-cmd.exe --wine
+```
+
+The builder also accepts `ORBIS_PUB_CMD` as the executable path environment variable, `--timeout` to set the build timeout, `--report` to choose the JSON report path, and `--force` to replace existing outputs. The default output report is `TV-TIME.pkg.build.json` beside the package.
+
+Before starting, it re-runs the package-input audit and rejects the CI-only `CUSA00000` fixture. It then runs `img_create --no_progress_bar --tmp_path ... --oformat pkg ...`, checks for a valid PS4 PKG header, and runs `img_file_list --passcode ...` using the passcode in the GP4. The package listing must contain every staged file. It also checks that `param.sfo`, `icon0.png`, and `pic1.png` are stored under `Sc0/`, while the actual theme files remain under `Image0/`, and that the staging manifest is not packaged.
+
+The wrapper's unit tests use a stub tool to test command construction, file placement, failed builds, invalid headers and missing entries. CI does not include the proprietary toolchain and therefore does not produce a real `.pkg`. A passing build/listing check establishes package structure only; installation, theme application, firmware compatibility and audio playback still require real-console testing. The production title ID must be chosen before generating the final SFO and package.
 
 ## Separate dynamic-scene candidate
 
@@ -124,7 +150,8 @@ See [DYNAMIC-SCENE-POC.md](DYNAMIC-SCENE-POC.md) for its structure, limits, and 
 - [x] Generate a shared XDM plane model and the dynamic RAF candidate.
 - [ ] Complete AT9 conversion and test home music playback.
 - [ ] Generate a production `sce_sys/param.sfo` using a chosen non-conflicting title ID and stage it in Image0.
-- [ ] Assemble and validate a theme `.pkg` with a verified, legitimate toolchain.
+- [x] Add a theme-specific `.pkg` maker wrapper with a pre-build audit, PKG-header check, and post-build `Image0`/`Sc0` inventory validation.
+- [ ] Run the maker with a separately supplied compatible `orbis-pub-cmd` toolchain and inspect an actual production `.pkg`.
 - [ ] Install and test the static theme on a compatible console.
 - [ ] Test the dynamic candidate separately on a compatible theme test environment.
 - [ ] Confirm the correct destination slots for Network and Media concept icons.
