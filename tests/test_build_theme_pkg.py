@@ -38,7 +38,10 @@ class BuildThemePkgTests(unittest.TestCase):
         self.tool_dir.mkdir()
         self.tool = self.tool_dir / "orbis-pub-cmd"
         self.tool.write_bytes(b"stub")
-        (self.tool_dir / "ext").mkdir()
+        ext = self.tool_dir / "ext"
+        ext.mkdir()
+        (ext / "sc.exe").write_bytes(b"stub")
+        (ext / "di.exe").write_bytes(b"stub")
 
         self.output = self.root / "out" / "TV-TIME.pkg"
         self.content_id = "UP9000-CUSA12345_00-TVTIME0000000000"
@@ -109,6 +112,7 @@ class BuildThemePkgTests(unittest.TestCase):
         self.assertEqual(commands[0][commands[0].index("--oformat") + 1], "pkg")
         self.assertEqual(commands[1][1], "img_file_list")
         self.assertEqual(commands[1][commands[1].index("--passcode") + 1], "0" * 32)
+        self.assertEqual(commands[1][commands[1].index("--oformat") + 1], "long")
 
     def test_theme_metadata_is_mapped_to_sc0(self):
         mapped = maker.expected_pkg_entries(self.package_files)
@@ -154,6 +158,11 @@ class BuildThemePkgTests(unittest.TestCase):
                 )
         self.assertEqual(commands, [])
         self.assertFalse(self.output.exists())
+
+    def test_missing_publishing_tool_helper_is_rejected(self):
+        (self.tool_dir / "ext" / "di.exe").unlink()
+        with self.assertRaisesRegex(maker.PackageBuildError, "di.exe"):
+            maker._tool_prefix(self.tool, use_wine=False)
 
     def test_output_must_be_pkg(self):
         with self.assertRaisesRegex(maker.PackageBuildError, "end in .pkg"):
