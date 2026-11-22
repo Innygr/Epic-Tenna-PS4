@@ -43,7 +43,7 @@ def main() -> int:
     draw.text((1480, 67), "14:02     ◉  ONLINE", font=small_font, fill=(255, 212, 0, 240))
 
     # A subtle translucent shelf mimics the visual weight of the home-screen row.
-    draw.rounded_rectangle((70, 645, 1850, 940), radius=28, fill=(8, 5, 8, 105),
+    draw.rounded_rectangle((70, 645, 1850, 940), radius=28, fill=(8, 5, 8, 218),
                            outline=(255, 212, 0, 95), width=2)
 
     apps = [
