@@ -91,6 +91,12 @@ def _tool_prefix(tool_path: Path, *, use_wine: bool) -> list[str]:
             f"missing adjacent tool support directory: {ext_dir} "
             "(keep the tool's ext/ folder beside orbis-pub-cmd)"
         )
+    missing_helpers = [name for name in ("sc.exe", "di.exe") if not (ext_dir / name).is_file()]
+    if missing_helpers:
+        raise PackageBuildError(
+            "missing required Publishing Tools helper(s) in "
+            f"{ext_dir}: {', '.join(missing_helpers)}"
+        )
 
     if os.name == "nt":
         if use_wine:
@@ -251,6 +257,8 @@ def build_theme_pkg(
             "img_file_list",
             "--passcode",
             passcode,
+            "--oformat",
+            "long",
             str(built_pkg),
         ]
         listing_output = _run_tool(
