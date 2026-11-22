@@ -18,11 +18,12 @@
 - [ ] Review illustrative home-screen overlay and adjust artwork if necessary
 - [ ] Confirm icon slots and export dimensions against selected supported format
 - [ ] Confirm wallpaper readability with actual console UI
+- [ ] Build and validate a separate original TV TIME dynamic-scene proof of concept (DDS frames and scene XML); keep static exports as fallback
 
 ## Platform compatibility
-- [ ] Confirm supported theme format and target-firmware compatibility from trustworthy references
-- [ ] Decide whether static or dynamic background is appropriate
-- [ ] Determine whether game-launch channel-switch concept is possible through a supported interface
+- [ ] Validate the documented theme format and package behaviour on a compatible test environment; firmware 14.02 compatibility is not yet confirmed
+- [x] Research static versus dynamic background options; retain static staging baseline and plan a separate dynamic-scene proof of concept
+- [x] Assess theme-level game-launch channel-switch support; no theme event interface is documented, so keep this separate from theme packaging
 - [ ] Document limitations without assuming community tools behave identically
 
 ## Acceptance criteria
