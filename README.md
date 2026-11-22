@@ -15,14 +15,16 @@ A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHE
 
 ## Packaging preparation
 - [Packaging readiness and staging instructions](docs/PACKAGING-READINESS.md)
-- [Asset preparation](tools/prepare_assets.py) · [Theme descriptor generator](tools/build_theme_descriptor.py) · [SFO metadata input generator](tools/build_param_sfx.py) · [Binary SFO writer](tools/build_param_sfo.py) · [Validator](tools/validate_staging.py)
+- [Asset preparation](tools/prepare_assets.py) · [Theme descriptor generator](tools/build_theme_descriptor.py) · [SFO metadata input generator](tools/build_param_sfx.py) · [Binary SFO writer](tools/build_param_sfo.py) · [GP4 project generator](tools/build_gp4.py) · [Validator](tools/validate_staging.py)
 - [Dynamic-scene proof of concept](docs/DYNAMIC-SCENE-POC.md)
 - Install dependencies: `python -m pip install -r requirements-packaging.txt`.
 - Generate the static theme tree: `python tools/prepare_assets.py`.
 - Validate the static theme tree: `python tools/validate_staging.py`.
 - Generate the package metadata input (using your chosen title ID): `python tools/build_param_sfx.py --title-id CUSA12345`.
 - Convert that XML input to a binary SFO: `python tools/build_param_sfo.py --input build/tv-time/package-input/param.sfx --output build/tv-time/package-input/param.sfo`.
-- Stage it in a separate theme tree: `python tools/prepare_assets.py --output build/tv-time/Image0-with-sfo --param-sfo build/tv-time/package-input/param.sfo`.
+- Stage it in an `Image0` folder: `python tools/prepare_assets.py --output build/tv-time/production/Image0 --param-sfo build/tv-time/package-input/param.sfo`.
+- Validate the staging tree: `python tools/validate_staging.py --staging build/tv-time/production/Image0`.
+- Generate the GP4 project description: `python tools/build_gp4.py --staging build/tv-time/production/Image0 --output build/tv-time/package-input/tv-time.gp4`.
 - Generate the optional dynamic scene candidate separately: `python tools/build_dynamic_scene.py --output build/tv-time-dynamic`.
 - Create review outputs with `tools/make_review_sheet.py` and `tools/preview_home_ui.py`.
 
@@ -41,7 +43,7 @@ GitHub Actions validates the static assets, theme descriptor, dynamic scene, and
 | Theme | TV TIME |
 
 ## Status
-Static theme staging, dynamic-scene generation, and a validated `param.sfx` XML input are automated and CI-validated. The binary `sce_sys/param.sfo`, a complete package build, AT9 music conversion, and real-console compatibility testing remain outstanding. See [roadmap](docs/ROADMAP.md) and [packaging readiness](docs/PACKAGING-READINESS.md).
+Static theme staging, dynamic-scene generation, a binary SFO writer, and a theme GP4 project generator are automated and CI-validated. A production title ID has not been selected; CI uses a separate fixture identity. Final PKG creation, AT9 music conversion, and real-console compatibility testing remain outstanding. See [roadmap](docs/ROADMAP.md) and [packaging readiness](docs/PACKAGING-READINESS.md).
 
 ## Safety and compatibility
 - Keep the console's current firmware documented; do not update solely for this project.
