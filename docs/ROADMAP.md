@@ -26,6 +26,7 @@
 - [x] Add binary PSF 1.1 writer and round-trip validator for `param.sfo`
 - [x] Add optional `--param-sfo` staging and CI validation in a separate fixture tree
 - [x] Generate and CI-validate a theme-mode GP4 project description
+- [x] Add a pre-package input audit with per-file hashes and a CI fixture identity guard
 - [ ] Confirm the dynamic scene on a compatible PS4 theme test environment
 
 ## Packaging
