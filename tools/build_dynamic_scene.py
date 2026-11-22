@@ -34,7 +34,7 @@ ACTOR_Z = 9.0
 ASPECT = 16 / 9
 
 # XDM (.mdx) record/property identifiers.
-MDX_MAGIC = b"XDM.00.1MSP\\x00" + b"\\x00" * 4
+MDX_MAGIC = b"XDM.00.1MSP\x00" + b"\x00" * 4
 TAG_ROOT = 0x0002
 TAG_MODEL = 0x0010
 TAG_NODE = 0x0011
@@ -151,12 +151,12 @@ def _pack_record(tag: int, name: str = "", children: tuple[bytes, ...] = (),
     else:
         a = b = header_size
     header = struct.pack("<HHIII", tag, header_size, a, b, total)
-    return header + (encoded_name.ljust(name_field, b"\\x00") if name_field else b"") + body
+    return header + (encoded_name.ljust(name_field, b"\x00") if name_field else b"") + body
 
 
 def _vertex(x: float, y: float, z: float, u: float, v: float) -> bytes:
     # 3 IEEE-754 binary16 position values, packed normal, 2 binary16 UV values.
-    return struct.pack("<3e", x, y, z) + b"\\x00\\x81\\x00\\x00" + struct.pack("<2e", u, v)
+    return struct.pack("<3e", x, y, z) + b"\x00\x81\x00\x00" + struct.pack("<2e", u, v)
 
 
 def plane_model_bytes() -> bytes:
@@ -228,7 +228,7 @@ def validate_plane_model(data: bytes) -> dict[str, int]:
                 raise ValueError(f"invalid XDM record {tag:#06x}")
             name = ""
             if header_size > 0x10:
-                name = data[offset + 0x10:offset + header_size].split(b"\\x00", 1)[0].decode("ascii")
+                name = data[offset + 0x10:offset + header_size].split(b"\x00", 1)[0].decode("ascii")
             body_start, body_end = offset + header_size, offset + total
             if tag == TAG_ARRAYS:
                 payload = data[body_start:body_end]
@@ -284,42 +284,42 @@ def scene_xml(frame_count: int) -> str:
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<raf angle_unit="degree">',
         '',
-        '\\t<system camera_switch_mode="vertical" layer_switch_distance="0"/>',
+        '\t<system camera_switch_mode="vertical" layer_switch_distance="0"/>',
         '',
-        f'\\t<camera id="camera1" type="perspective" yfov="{CAMERA_YFOV:g}"'
+        f'\t<camera id="camera1" type="perspective" yfov="{CAMERA_YFOV:g}"'
         f' znear="{CAMERA_ZNEAR:g}" zfar="{CAMERA_ZFAR:g}"'
         ' position="0 0 0" direction="0 0 -1" up="0 1 0"/>',
-        '\\t<light id="light1" type="ambient" color="1 1 1"/>',
+        '\t<light id="light1" type="ambient" color="1 1 1"/>',
         '',
-        '\\t<model id="plane" file="plane.fbx"/>',
+        '\t<model id="plane" file="plane.fbx"/>',
         '',
     ]
     for index in range(frame_count):
         fid = f"f{index:02d}"
         lines += [
-            f'\\t<material id="{fid}" effect="pure_texture">',
-            f'\\t\\t<texture file="{index:02d}.dds"/>',
-            '\\t</material>',
+            f'\t<material id="{fid}" effect="pure_texture">',
+            f'\t\t<texture file="{index:02d}.dds"/>',
+            '\t</material>',
         ]
     lines.append('')
     for index in range(frame_count):
         fid = f"f{index:02d}"
         alpha = 1 if index == 0 else 0
         lines.append(
-            f'\\t<actor id="{fid}" model="plane" material="{fid}"'
+            f'\t<actor id="{fid}" model="plane" material="{fid}"'
             f' color="1 1 1 {alpha}" position="0 0 {ACTOR_Z:g}" zsort="back_to_front"/>'
         )
-    lines += ['', '\\t<sequence>']
+    lines += ['', '\t<sequence>']
     for index in range(frame_count):
         current, nxt = f"f{index:02d}", f"f{(index + 1) % frame_count:02d}"
         lines += [
-            f'\\t\\t<case wait="{WAIT_SECONDS:g}">',
-            f'\\t\\t\\t<actor id="{current}" color="1 1 1 0"/>',
-            f'\\t\\t\\t<actor id="{nxt}" color="1 1 1 1"/>',
-            '\\t\\t</case>',
+            f'\t\t<case wait="{WAIT_SECONDS:g}">',
+            f'\t\t\t<actor id="{current}" color="1 1 1 0"/>',
+            f'\t\t\t<actor id="{nxt}" color="1 1 1 1"/>',
+            '\t\t</case>',
         ]
-    lines += ['\\t</sequence>', '', '</raf>', '']
-    return "\\n".join(lines)
+    lines += ['\t</sequence>', '', '</raf>', '']
+    return "\n".join(lines)
 
 
 def main() -> int:
@@ -343,14 +343,14 @@ def main() -> int:
     model_data = plane_model_bytes()
     model_summary = validate_plane_model(model_data)
     (raf_dir / "plane.mdx").write_bytes(model_data)
-    (raf_dir / "index.xml").write_text(scene_xml(FRAME_COUNT), encoding="utf-8", newline="\\n")
+    (raf_dir / "index.xml").write_text(scene_xml(FRAME_COUNT), encoding="utf-8", newline="\n")
     (output / "DYNAMIC-SCENE-STATUS.txt").write_text(
-        "EXPERIMENTAL SCENE CANDIDATE\\n"
-        f"Frames: {FRAME_COUNT} x {WIDTH}x{HEIGHT} DXT1\\n"
-        f"Frame payload: {total} bytes\\n"
-        f"Shared plane model: {model_summary['bytes']} bytes, {model_summary['vertices']} vertices\\n"
-        "The scene model, RAF XML, and DXT1 frames are generated together.\\n"
-        "Not installable: theme descriptor, SFO, package build, and real-console validation remain outstanding.\\n",
+        "EXPERIMENTAL SCENE CANDIDATE\n"
+        f"Frames: {FRAME_COUNT} x {WIDTH}x{HEIGHT} DXT1\n"
+        f"Frame payload: {total} bytes\n"
+        f"Shared plane model: {model_summary['bytes']} bytes, {model_summary['vertices']} vertices\n"
+        "The scene model, RAF XML, and DXT1 frames are generated together.\n"
+        "Not installable: theme descriptor, SFO, package build, and real-console validation remain outstanding.\n",
         encoding="utf-8"
     )
     print(f"PASS: generated {FRAME_COUNT} DXT1 frames ({total:,} bytes)")
