@@ -220,7 +220,10 @@ def validate_param_sfo(binary: bytes, expected_xml: str | None = None) -> dict[s
     if result["FORMAT"] != "obs":
         raise ParamSfoError("binary SFO FORMAT must be obs")
     if expected_xml is not None:
-        expected = validate_param_sfx(expected_xml)
+        try:
+            expected = validate_param_sfx(expected_xml)
+        except ParamSfxError as exc:
+            raise ParamSfoError(f"source param.sfx failed validation: {exc}") from exc
         if result != expected:
             raise ParamSfoError("binary SFO values do not match the source param.sfx")
     return result
