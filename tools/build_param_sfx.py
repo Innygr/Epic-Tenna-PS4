@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import math
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -76,7 +77,7 @@ def build_param_sfx(
     if bgm_loudness is not None:
         if not isinstance(bgm_loudness, (int, float)) or not (-100.0 <= bgm_loudness <= 0.0):
             raise ParamSfxError("bgm-loudness must be a measured LKFS value between -100 and 0")
-        if not __import__("math").isfinite(float(bgm_loudness)):
+        if not math.isfinite(float(bgm_loudness)):
             raise ParamSfxError("bgm-loudness must be a finite measured LKFS value")
     clean_title = title.strip()
     pubtoolinfo = f"c_date={date_text}"
