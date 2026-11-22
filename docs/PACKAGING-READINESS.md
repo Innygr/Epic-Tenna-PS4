@@ -4,7 +4,7 @@
 
 The repository now produces a **static PS4 theme staging tree** with a `theme.xml` descriptor and a separate **experimental dynamic-scene candidate**. The static tree preserves the Tenna home wallpaper and the red/yellow function-screen background. CI validates the generated PNGs, descriptor, manifest, dynamic scene, and original WAV music master.
 
-It does not generate `sce_sys/param.sfo`, create or sign a `.pkg`, or prove compatibility with the target console. A staging folder or ZIP is not an installable theme.
+The pipeline can stage an optional binary `sce_sys/param.sfo` and generate a theme GP4 project description. It does not create or sign a `.pkg`, or prove compatibility with the target console. A staging folder, audit report, GP4 file, or ZIP is not an installable theme.
 
 ## Default static staging layout
 
@@ -87,6 +87,19 @@ python tools/build_gp4.py --staging build/tv-time/production/Image0 --output bui
 
 The generator checks the theme descriptor, SFO theme identifiers, SFO hash/size metadata and the exact staging file list. It excludes `STAGING-MANIFEST.json` from the package file list and writes a `pkg_ps4_theme` volume with no application chunk metadata. The result is only a GP4 project description; it does not invoke a package tool or create a `.pkg`. CI creates a separate GP4 fixture using the validation-only `CUSA00000` identity.
 
+## Pre-package input audit
+
+After generating an `Image0` tree with a real, non-conflicting title ID and building its GP4 description, run:
+
+```bash
+python tools/audit_package_inputs.py \\
+  --staging build/tv-time/production/Image0 \\
+  --gp4 build/tv-time/package-input/tv-time.gp4 \\
+  --output build/tv-time/package-input/package-input-audit.json
+```
+
+The audit re-checks the theme palette, manifest hashes, SFO identity and theme category, optional AT9 state, and exact GP4-to-staging file inventory. It writes a JSON report containing a SHA-256 and byte count for each package input. It refuses the CI-only `CUSA00000` identity by default; `--allow-ci-fixture` exists only for explicit fixture validation, and the report labels that result as fixture-only. The audit report is stored outside `Image0` and is not added to the theme package. Passing this audit still does not create a `.pkg` or prove console compatibility.
+
 ## Separate dynamic-scene candidate
 
 Run:
@@ -107,6 +120,7 @@ See [DYNAMIC-SCENE-POC.md](DYNAMIC-SCENE-POC.md) for its structure, limits, and 
 - [x] Validate the static descriptor and generated assets in CI.
 - [x] Add a binary PSF writer and round-trip validator for the theme SFO metadata.
 - [x] Add a theme GP4 project generator and validate the project file list in CI.
+- [x] Add a pre-package input audit with per-file hashes and a CI fixture identity guard.
 - [x] Generate a shared XDM plane model and the dynamic RAF candidate.
 - [ ] Complete AT9 conversion and test home music playback.
 - [ ] Generate a production `sce_sys/param.sfo` using a chosen non-conflicting title ID and stage it in Image0.
