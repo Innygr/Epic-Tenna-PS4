@@ -18,6 +18,7 @@ A fan-made PS4 theme project for El Quatro (CUH-1115A; firmware 14.02 and GoldHE
 - [Console test acceptance checklist](docs/CONSOLE-TEST-CHECKLIST.md)
 - [Asset preparation](tools/prepare_assets.py) · [Theme descriptor generator](tools/build_theme_descriptor.py) · [SFO metadata input generator](tools/build_param_sfx.py) · [Binary SFO writer](tools/build_param_sfo.py) · [GP4 project generator](tools/build_gp4.py) · [Package input audit](tools/audit_package_inputs.py) · [Theme PKG maker](tools/build_theme_pkg.py) · [Home-music loudness measurement](tools/measure_home_bgm.py) · [Validator](tools/validate_staging.py)
 - [Dynamic-scene proof of concept](docs/DYNAMIC-SCENE-POC.md)
+- [Original home music: generation, source-master checks, and ATRAC9 handoff](docs/HOME-MUSIC.md)
 - Install dependencies: `python -m pip install -r requirements-packaging.txt`.
 - Generate the static theme tree: `python tools/prepare_assets.py`.
 - Validate the static theme tree: `python tools/validate_staging.py`.
